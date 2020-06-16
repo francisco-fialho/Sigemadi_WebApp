@@ -50,7 +50,7 @@ function Material_Request(props) {
     const intersectionObserver = new IntersectionObserver((entries) => {
         const radio = entries[0].intersectionRatio
         setScollRadio(radio)
-    },scrollOptions)
+    }, scrollOptions)
 
     useEffect(() => {
         if (scrollRadio >= 0 && moreData && searchFilters != null && !showLoading) {
@@ -63,19 +63,20 @@ function Material_Request(props) {
 
     useEffect(() => {
         if (materials.length > 0 && checkboxes.length == 0) {
-            const material = JSON.parse(localStorage.getItem('material'))
+            const material = id == null ? JSON.parse(localStorage.getItem('new_material')) : JSON.parse(localStorage.getItem(`${id}_material`))
             if (material != null) {
-                setCheckboxes(materials.reduce(
+                setCheckboxes(material.reduce(
                     (options, option) => ({
                         ...options,
-                        [option.id]: material.some((value, idx, arr) => value.id === option.id),
+                        [option.id]: true,
                     }),
                     []
                 ))
+                // material.map(m => selectCheckBox(m.id))
                 setSelectedMaterials(material)
             }
         }
-    }, [materials])
+    }, [materials, id])
 
 
     function searchMaterial(filters, pageNumber, materialAdded) {
@@ -104,19 +105,36 @@ function Material_Request(props) {
                 newMaterial.push(...data)
                 await setMaterials(newMaterial)
                 setShowLoading(false)
-                data.map(m => {
-                    if (selectedMaterials.find(material => m.id == material.id))
-                        selectCheckBox(m.id)
-                })
+                // data.map(m => {
+                //     if (selectedMaterials.find(material => m.id == material.id))
+                //         selectCheckBox(m.id)
+                // })
                 setSearchFilters(filters)
             })
             .catch(err => setError(Response_Handler(err.response)))
     }
 
-    function addMaterial() {
+    async function addMaterial() {
 
-        const selectedAvailableMaterial = selectedMaterials.filter(m => materials.find(material => material.id == m.id) != undefined)
+        let selectedAvailableMaterial = selectedMaterials.filter(m => materials.find(material => material.id == m.id) != undefined)
 
+        //CASO SEJA SELECIONADO UM MATERIAL NUMA PÁGINA MAIS A FRENTE QUE NAO TENHA SIDO CARREGADA TENHO DE VER
+        // SE ESTA DISPONIVEL PARA O ADICIONAR, PARA FAZER O MINIMO DE PEDIDOS POSSIVEL
+
+        let checkMaterial = selectedMaterials.filter(m => materials.find(material => material.id == m.id) == undefined)
+
+
+        
+
+        await Promise.all(
+            checkMaterial.map(async (m, idx) => {
+                const resp = await axios.get(materialUrl.replace(':id', m.id))
+                if (resp.data.can_be_reported) {
+                    selectedAvailableMaterial.push({...resp.data,id:m.id})
+                }
+            })
+        )
+        
         if (selectedAvailableMaterial.length === 0) {
             return toast({
                 type: 'warning',
@@ -127,7 +145,9 @@ function Material_Request(props) {
             })
         }
 
-        localStorage.setItem('material', JSON.stringify(selectedAvailableMaterial))
+        const saveObject = id == null ? 'new_material' : `${id}_material`
+
+        localStorage.setItem(saveObject, JSON.stringify(selectedAvailableMaterial))
 
         if (id === null) {
             props.history.push('/auth/staff/newrequest/material/checkout')
@@ -135,6 +155,7 @@ function Material_Request(props) {
         else {
             props.history.push(`/auth/staff/request/${id}/material/checkout`)
         }
+
     }
 
 

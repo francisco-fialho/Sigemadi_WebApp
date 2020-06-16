@@ -295,10 +295,8 @@ function Request(props) {
                         <Button size='large' basic style={{ marginBottom: '2%' }} onClick={newRequest} icon='file alternate' content='New Request' />
 
                         <div style={{ display: 'block' }}>
-                            <Button size='large' basic style={{ float: 'right', visibility: 'hidden' }} id="resetbutton" content='Reset' onClick={resetSearch}></Button>
-                            <Button size='large' basic style={{ float: 'right' }} content='Search' icon='search' onClick={onClickFilters}></Button>
                             Filter By Day:
-                            <div style={{ display: 'inline-block' }}>
+                        <div style={{ display: 'inline-block' }}>
                                 <Date date={date} setDay={setDay}></Date>
                             </div>
                             <Input size='mini' id='searchUser' onChange={(event, object) => setUserId(object.value)} type="text" placeholder="Introduce student number" icon='users' style={{ float: 'right' }} />
@@ -306,6 +304,10 @@ function Request(props) {
                             <div style={{ display: 'block', marginBottom: '1%', float: 'left' }}>
                                 <Filter changeFilter={onChangeOption} name="type" title='Type' types={requestTypes} value={requestType.id} />
                             </div>
+                        </div>
+                        <div style={{ display: 'block', marginTop: '2%'}}>
+                        <Button size='large' basic content='Search' icon='search' onClick={onClickFilters}></Button>
+                            <Button size='large' basic style={{ visibility: 'hidden' }} id="resetbutton" content='Reset' onClick={resetSearch}></Button>
                         </div>
                         <Divider />
                         <div style={{ display: 'block' }}>

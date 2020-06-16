@@ -31,7 +31,9 @@ function Checkout_Request(props) {
                 }).catch(err => setError(Response_Handler(err.response)))
         }
 
-        const selectedMaterial = JSON.parse(localStorage.getItem('material'))
+        const saveObject = requestId == null ? 'new_material' : `${requestId}_material`
+        
+        const selectedMaterial = JSON.parse(localStorage.getItem(saveObject))
         if (selectedMaterial == null) {
             toast({
                 type: 'error',
