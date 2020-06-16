@@ -129,7 +129,6 @@ function Material_Details(props) {
                                 }
                             </List>
                             {
-                                //MUDAR AQUI PARA O CAN_BE_REPORTED
                                 (material.can_be_reported && canReport()) ?
                                     <Button size='medium' color='red' style={{ marginBottom: '5%' }} onClick={() => onReport()} icon='bug' content='Report Damage'></Button>
                                     : null

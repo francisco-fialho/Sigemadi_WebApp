@@ -45,7 +45,6 @@ function Home(props) {
                 axios.get(userRolesUrl.replace(':id', number))
                     .then(res => {
                         sessionStorage.setItem('userinfo',JSON.stringify({ roles: res.data['roles'], ...resp.data }))
-                        // cookies.set('userinfo', )
                         props.history.push('/auth/roles')
                     }).catch(err => Response_Handler(err.response))
             }).catch(err => Response_Handler(err.response))

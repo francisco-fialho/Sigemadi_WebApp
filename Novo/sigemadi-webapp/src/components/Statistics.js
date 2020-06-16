@@ -177,7 +177,7 @@ function Statistics(props) {
             })
             .catch(err => ResponseHandler(err.response))
     }
-    
+
     function getRequestsPerTypeByYear() {
         let queryString = ''
         if (requestedTypeByYear != 'all') queryString += `?type=${requestedTypeByYear}`
@@ -215,12 +215,13 @@ function Statistics(props) {
                 </Statistic>
             </div>
 
-            <div style={{ float: 'left', marginTop: '5%' }}>
+            <div style={{ marginTop: '5%' }}>
                 <Button style={{ float: 'right' }} icon='refresh' circular basic onClick={getTopTenMostUsedMaterialTypes}></Button>
                 <Header size='small'>Top Ten Most Used Material Types</Header>
                 <BarChart
                     width={700}
                     height={300}
+                    style={{ marginLeft: 'auto',marginRight: 'auto'}}
                     data={topTenUsedMaterialTypes}
                 >
                     <CartesianGrid strokeDasharray="3 3" />
@@ -233,12 +234,13 @@ function Statistics(props) {
             </div>
 
 
-            <div style={{ float: 'right', marginTop: '5%' }}>
+            <div style={{ marginTop: '5%' }}>
                 <Button style={{ float: 'right' }} icon='refresh' circular basic onClick={getTopTenMostUsedMaterial}></Button>
                 <Header size='small'>Top Ten Most Used Material</Header>
                 <BarChart
                     width={700}
                     height={300}
+                    style={{ marginLeft: 'auto',marginRight: 'auto'}}
                     data={topTenUsedMaterial}
                 >
                     <CartesianGrid strokeDasharray="3 3" />
@@ -250,12 +252,13 @@ function Statistics(props) {
                 </BarChart>
             </div>
 
-            <div style={{ float: 'left', marginTop: '6.8%' }}>
+            <div style={{ marginTop: '6.8%' }}>
                 <Button style={{ float: 'right' }} icon='refresh' circular basic onClick={getDamagePerType}></Button>
                 <Header size='small'>Damages Per Type</Header>
                 <BarChart
                     width={700}
                     height={300}
+                    style={{ marginLeft: 'auto',marginRight: 'auto'}}
                     data={damagePerType}
                 >
                     <CartesianGrid strokeDasharray="3 3" />
@@ -267,13 +270,14 @@ function Statistics(props) {
                 </BarChart>
             </div>
 
-            <div style={{ float: 'right', marginTop: '5%' }}>
+            <div style={{ marginTop: '5%' }}>
                 <Button style={{ float: 'right' }} icon='refresh' circular basic onClick={getDamagedMaterial}></Button>
                 <Header size='small'>Damaged Material</Header>
                 <Filter types={types} value={damageType} changeFilter={(value) => { setDamageType(value.id) }} />
                 <BarChart
                     width={700}
                     height={300}
+                    style={{ marginLeft: 'auto',marginRight: 'auto'}}
                     data={damagedMaterial}
                 >
                     <CartesianGrid strokeDasharray="3 3" />
@@ -285,12 +289,13 @@ function Statistics(props) {
                 </BarChart>
             </div>
 
-            <div style={{ float: 'left', marginTop: '6.8%' }}>
+            <div style={{ marginTop: '6.8%' }}>
                 <Button style={{ float: 'right' }} icon='refresh' circular basic onClick={getnumberOfRequestedHoursPerType}></Button>
                 <Header size='small'>Number of Requested Hours Per Type</Header>
                 <BarChart
                     width={700}
                     height={300}
+                    style={{ marginLeft: 'auto',marginRight: 'auto'}}
                     data={numberOfRequestedHoursPerType}
                 >
                     <CartesianGrid strokeDasharray="3 3" />
@@ -302,13 +307,14 @@ function Statistics(props) {
                 </BarChart>
             </div>
 
-            <div style={{ float: 'right', marginTop: '5%' }}>
+            <div style={{ marginTop: '5%' }}>
                 <Button style={{ float: 'right' }} icon='refresh' circular basic onClick={getnumberOfRequestedHoursPerMaterial}></Button>
                 <Header size='small'>Number of Requested Hours Per Material</Header>
                 <Filter types={types} value={requestedType} changeFilter={(value) => { setRequestedType(value.id) }} />
                 <BarChart
                     width={700}
                     height={300}
+                    style={{ marginLeft: 'auto',marginRight: 'auto'}}
                     data={numberOfRequestedHoursPerMaterial}
                 >
                     <CartesianGrid strokeDasharray="3 3" />
@@ -320,7 +326,7 @@ function Statistics(props) {
                 </BarChart>
             </div>
 
-            <div style={{ float: 'left', marginTop: '5%' }}>
+            <div style={{ marginTop: '5%' }}>
                 <Button style={{ float: 'right' }} icon='refresh' circular basic onClick={getRequestsPerTypeByDay}></Button>
                 <Header size='small'>Requests Per Type By Day</Header>
                 <Button content='Reset' floated='right' onClick={() => { setDayTo(''); setDayFrom(''); setRequestedTypeByDay('all') }} />
@@ -330,6 +336,7 @@ function Statistics(props) {
                 <BarChart
                     width={700}
                     height={300}
+                    style={{ marginLeft: 'auto',marginRight: 'auto'}}
                     data={requestsPerTypeByDay}
                 >
                     <CartesianGrid strokeDasharray="3 3" />
@@ -341,7 +348,7 @@ function Statistics(props) {
                 </BarChart>
             </div>
 
-            <div style={{ float: 'right', marginTop: '5%' }}>
+            <div style={{ marginTop: '5%' }}>
                 <Button style={{ float: 'right' }} icon='refresh' circular basic onClick={getRequestsPerTypeByMonth}></Button>
                 <Header size='small'>Requests Per Type By Month</Header>
                 <Button content='Reset' floated='right' onClick={() => { setMonthTo(''); setMonthFrom(''); setRequestedTypeByMonth('all') }} />
@@ -351,6 +358,7 @@ function Statistics(props) {
                 <BarChart
                     width={700}
                     height={300}
+                    style={{ marginLeft: 'auto',marginRight: 'auto'}}
                     data={requestsPerTypeByMonth}
                 >
                     <CartesianGrid strokeDasharray="3 3" />
@@ -363,7 +371,7 @@ function Statistics(props) {
             </div>
 
 
-            <div style={{ float: 'right', marginTop: '5%' }}>
+            <div style={{ marginTop: '5%' }}>
                 <Button style={{ float: 'right' }} icon='refresh' circular basic onClick={getRequestsPerTypeByYear}></Button>
                 <Header size='small'>Requests Per Type By Year</Header>
                 <Button content='Reset' floated='right' onClick={() => { setYearTo(''); setYearFrom(''); setRequestedTypeByYear('all') }} />
@@ -373,6 +381,7 @@ function Statistics(props) {
                 <BarChart
                     width={700}
                     height={300}
+                    style={{ marginLeft: 'auto',marginRight: 'auto'}}
                     data={requestsPerTypeByYear}
                 >
                     <CartesianGrid strokeDasharray="3 3" />
