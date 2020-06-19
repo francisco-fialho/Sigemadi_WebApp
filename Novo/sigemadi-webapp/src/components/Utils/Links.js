@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:3000/sigemadi/api'
+const BASE_URL = 'http://10.62.73.30:8085/sigemadi/api'
 
 const sci_areasUrl = `${BASE_URL}/scientificareas`
 const sci_areaUrl = `${BASE_URL}/scientificareas/:id`
