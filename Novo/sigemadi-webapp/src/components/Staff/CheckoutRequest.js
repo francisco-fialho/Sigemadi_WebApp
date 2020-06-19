@@ -31,8 +31,8 @@ function Checkout_Request(props) {
                 }).catch(err => setError(Response_Handler(err.response)))
         }
 
-        const saveObject = requestId == null ? 'new_material' : `${requestId}_material`
-        
+        const saveObject = requestId == undefined ? 'new_material' : `${requestId}_material`
+
         const selectedMaterial = JSON.parse(localStorage.getItem(saveObject))
         if (selectedMaterial == null) {
             toast({
@@ -43,26 +43,10 @@ function Checkout_Request(props) {
                 description: 'Please select the material again!'
             })
             setTimeout(() => props.history.push(props.location.pathname.replace('/checkout', '')), 3000)
-        } else {
-            const materialChecked = uniMaterial(selectedMaterial)
-            setMaterial(materialChecked)
         }
+        setMaterial(selectedMaterial)
     }, [])
 
-
-    function uniMaterial(material) {
-        const materialInfo = material.reduce((materials, material) => {
-            const id = material.id.slice(0, 2)
-            let uni = true
-            if (id === '00') {
-                uni = false
-            }
-            materials.push({ ...material, uni: uni })
-            return materials
-        }, [])
-
-        return materialInfo
-    }
 
     function searchProfile() {
         const id = document.getElementById("searchprofile").value
@@ -96,7 +80,7 @@ function Checkout_Request(props) {
         return (<List size='large' divided style={{ marginBottom: '5%' }}>
             {
                 material.map(material => {
-                    if (!material.uni) {
+                    if (material.id.slice(0,2)=='00') {
                         return <List.Item key={material.id}>
                             <List.Content floated='left'>
                                 <List.Header >{material.name}</List.Header>
@@ -104,7 +88,7 @@ function Checkout_Request(props) {
                             <List.Content floated='right'>
                                 <List.Description>
                                     Quantity:
-                                    <Input id={`${material.id}quantity`} type="number" required placeholder="Quantity" min={MIN} max={material.available_quantity > MAX ? MAX : material.available_quantity}></Input>
+                                    <Input id={`${material.id}quantity`} type="number" required min={MIN} max={material.available_quantity > MAX ? MAX : material.available_quantity}></Input>
                                 </List.Description>
                             </List.Content>
                         </List.Item>
@@ -112,7 +96,7 @@ function Checkout_Request(props) {
                     } else {
                         return <List.Item key={material.id}>
                             <List.Content floated='left'>
-                                <List.Header >{material.name}</List.Header>
+                                <List.Header>{material.name}</List.Header>
                             </List.Content>
                         </List.Item>
                     }
@@ -122,11 +106,11 @@ function Checkout_Request(props) {
         )
     }
 
-    function buildMaterialRequested() {
+    function checkMaterialQuantity() {
         let verifyQuantity = false
 
         let materials_requested = material.reduce((materials, material) => {
-            if (material.uni) {
+            if (material.id.slice(0,2)!='00') {
                 materials.push({ 'material_id': material.id, 'quantity': '1' })
             }
             else {
@@ -161,7 +145,7 @@ function Checkout_Request(props) {
 
         if (id != 'ID') {
 
-            const material = buildMaterialRequested()
+            const material = checkMaterialQuantity()
             if (material === null) return
             submitButton.disabled = true
 

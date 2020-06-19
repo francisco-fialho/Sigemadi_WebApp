@@ -29,7 +29,6 @@ function Reservation(props) {
     }
 
 
-
     return (
         <div>
             <SemanticToastContainer />

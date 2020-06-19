@@ -31,9 +31,6 @@ function Type_Management(props) {
             }).catch(err => setError(Response_Handler(err.response)))
     }
 
-    function onSubmit() {
-        props.history.push('/auth/labmanager/addtype')
-    }
 
     function deleteTypes(id) {
         const button = document.getElementById('delete' + id)
@@ -52,6 +49,10 @@ function Type_Management(props) {
                 Response_Handler(err.response)
                 button.disabled = false
             })
+    }
+    
+    function onSubmit() {
+        props.history.push('/auth/labmanager/addtype')
     }
 
     function createTypesList() {

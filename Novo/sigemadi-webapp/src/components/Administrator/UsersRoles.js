@@ -14,6 +14,7 @@ function Users_Roles(props) {
     const [filter_role, setFilter_Role] = useState(null)
     const [filter_id, setFilter_Id] = useState(null)
     const [roles, setRoles] = useState([])
+    const [reset, setReset] = useState('collapse')
 
     const [showLoading, setShowLoading] = useState(false)
     const [scrollRadio, setScollRadio] = useState(null)
@@ -39,11 +40,11 @@ function Users_Roles(props) {
                 }
                 if (type === 'id') {
                     setFilter_Id(next.value[1])
+                    document.getElementById("searchProfile").value = next.value[1]
                 }
                 next = entries.next()
             } while (!next.done)
-            const resetButton = document.getElementById("reset_filter")
-            resetButton.style.visibility = "visible"
+            setReset('visible')
         }
         axios.get(rolesUrl)
             .then(resp => {
@@ -67,7 +68,7 @@ function Users_Roles(props) {
     const intersectionObserver = new IntersectionObserver((entries) => {
         const radio = entries[0].intersectionRatio
         setScollRadio(radio)
-    },scrollOptions)
+    }, scrollOptions)
 
     useEffect(() => {
 
@@ -100,10 +101,13 @@ function Users_Roles(props) {
         requestUrl += `&page=${page}`
 
         axios.get(usersUrl + requestUrl)
-            .then(async resp => {
+            .then(resp => {
                 const data = resp.data['users']
 
                 if (personsAdded.length === 0 && data.length === 0) {
+                    setPersons(data)
+                    setMoreData(false)
+                    setShowLoading(false)
                     return toast({
                         type: 'error',
                         title: 'Something Went Wrong',
@@ -117,7 +121,7 @@ function Users_Roles(props) {
 
                 const newPersons = personsAdded
                 newPersons.push(...data)
-                await setPersons(newPersons)
+                setPersons(newPersons)
                 setShowLoading(false)
 
                 if (search != '')
@@ -148,8 +152,6 @@ function Users_Roles(props) {
 
     function changeFilter(filter) {
         if (filter != 'all') {
-            const resetButton = document.getElementById("reset_filter")
-            resetButton.style.visibility = "visible"
             setFilter_Role(filter)
             setEditing(true)
         }
@@ -166,11 +168,9 @@ function Users_Roles(props) {
         setFilter_Role(role)
         setMoreData(true)
         searchPersons(id, role, newPage, [])
-
-        const resetButton = document.getElementById("reset_filter")
-        resetButton.style.visibility = "hidden"
+        setReset('hidden')
         props.history.push(props.location.pathname)
-        document.getElementById("searchprofile").value = ""
+        document.getElementById("searchProfile").value = ""
     }
 
     function findFilter() {
@@ -191,9 +191,8 @@ function Users_Roles(props) {
             setPage(newPage)
             setMoreData(true)
             setShowLoading(true)
+            setReset('visible')
             searchPersons(filter_id, filter_role, newPage, [])
-            const resetButton = document.getElementById("reset_filter")
-            resetButton.style.visibility = "visible"
         }
     }
 
@@ -231,13 +230,15 @@ function Users_Roles(props) {
                     <div>
 
                         <Header size='medium'>Users:</Header>
-                        <Button size='large' basic onClick={searchProfile} style={{ float: 'right' }} icon='search' content='Search'></Button>
-                        <Input size='mini' style={{ float: 'right' }} icon='users' id='searchprofile' onChange={(event, object) => { setEditing(true); setFilter_Id(object.value) }} iconPosition='left' placeholder='Introduce user number...' />
-                        <div style={{ float: 'left', marginTop: '1%' }}>
+                        <Input size='mini' style={{ float: 'right' }} icon='users' id='searchProfile' onChange={(event, object) => { setEditing(true); setFilter_Id(object.value) }} iconPosition='left' placeholder='Introduce user number...' />
+                        <div style={{ display: 'block', float: 'left', marginTop: '1%' }}>
                             Filter by Role:
-                    <Option values={roles} value={findFilter()} changeOption={changeFilter} defaultValue="All"></Option>
+                        <Option values={roles} value={findFilter()} changeOption={changeFilter} defaultValue={findFilter() == 'all' ? 'All' : null} />
                         </div>
-                        <Button size='small' id="reset_filter" basic onClick={resetFilter} style={{ visibility: "collapse", marginLeft: '1%', marginTop: '0.5%' }} content='Reset'></Button>
+                        <div style={{ display: 'block', marginLeft: '6%', }}>
+                            <Button size='large' basic onClick={searchProfile} icon='search' content='Search' />
+                            <Button size='large' id="reset_filter" basic onClick={resetFilter} style={{ visibility: reset, marginLeft: '1%', marginTop: '0.5%' }} content='Reset' />
+                        </div>
                         <Divider />
 
                         <Grid columns={6} id='users' style={style}>

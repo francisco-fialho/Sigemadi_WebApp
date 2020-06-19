@@ -16,6 +16,7 @@ function Material_Reservation(props) {
     const [searchedtypes, setSearchedTypes] = useState([])
     const [selectedTypes, setSelectedTypes] = useState([])
     const [error, setError] = useState(null)
+    const [reset, setReset] = useState('collapse')
 
     const style = {
         display: 'inline-block',
@@ -46,7 +47,7 @@ function Material_Reservation(props) {
         const filter_subject = filters.find(f => f.type == 'subject')
 
         if (lastFilter.type === 'sci_area') {
-            searchSci_Area(lastFilter, filter_subject, filtersUrl)
+            searchSciArea(lastFilter, filter_subject, filtersUrl)
 
         }
         else if (lastFilter.type === 'subject') {
@@ -54,7 +55,7 @@ function Material_Reservation(props) {
         }
     }
 
-    function searchSci_Area(lastFilter, filter_subject) {
+    function searchSciArea(lastFilter, filter_subject) {
         axios.get(sci_areaUrl.replace(':id', lastFilter.id))
             .then(resp => {
                 let subj = intersect(resp.data['subjects'], subjects)
@@ -128,74 +129,6 @@ function Material_Reservation(props) {
 
     }
 
-    function filterTypes() {
-        setTypes(searchedtypes)
-    }
-
-    function changeFilter(filter) {
-        if (filters.length === 0) {
-            const resetButton = document.getElementById("reset_filter")
-            resetButton.style.visibility = "visible"
-        }
-        if (filter.id != 'all') {
-            let changed = filters
-            const idx = changed.findIndex(f => f.type === filter.type)
-            if (idx > -1) {
-                changed[idx] = filter
-            }
-            else {
-                changed.push(filter)
-            }
-            setFilters(changed)
-            applyFilters([filter])
-        }
-    }
-
-    function filterTypesEvent(event) {
-        event.preventDefault()
-        const resetButton = document.getElementById("reset_filter")
-
-        if (filters.length > 0) {
-
-            filterTypes()
-            resetButton.style.visibility = "visible"
-        }
-    }
-
-    function resetFilter(event) {
-        event.preventDefault()
-        const resetButton = document.getElementById("reset_filter")
-        resetButton.style.visibility = "hidden"
-        props.history.push(props.location.pathname)
-
-        searchDefaultFilters(selectedTypes)
-    }
-
-    function findFilter(type) {
-        let filter = filters.find(f => f.type === type)
-        if (filter != undefined) {
-            return filter.id
-        }
-        return 'all'
-    }
-
-    function createCheckBoxes() {
-        return materialTypes.map(t => {
-            return (
-                <Grid.Column key={t.id}>
-                    <Card centered key={t.id}>
-                        <Card.Header>{t.name}</Card.Header>
-                        <Card.Description>{t.id}</Card.Description>
-                        <Card.Content extra>
-                            {
-                                checkboxes[t.id] === true ? <Button fluid color='green' onClick={() => onChange(t.id)}> Selected! </Button>
-                                    : <Button fluid onClick={() => onChange(t.id)}> Select </Button>
-                            }
-                        </Card.Content>
-                    </Card>
-                </Grid.Column>)
-        })
-    }
     function onSubmit() {
 
         const selectedAvailableTypes = selectedTypes.filter(t => materialTypes.find(type => type.id == t.id))
@@ -215,6 +148,47 @@ function Material_Reservation(props) {
         })
     }
 
+    function onChangeFilter(filter) {
+
+        if (filter.id != 'all') {
+            let changed = filters
+            const idx = changed.findIndex(f => f.type === filter.type)
+            if (idx > -1) {
+                changed[idx] = filter
+            }
+            else {
+                changed.push(filter)
+            }
+            setFilters(changed)
+            applyFilters([filter])
+        }
+    }
+
+    function filterTypesEvent(event) {
+        event.preventDefault()
+
+        if (filters.length > 0) {
+            setTypes(searchedtypes)
+            setReset('visible')
+        }
+    }
+
+    function resetFilter(event) {
+        event.preventDefault()
+        setReset('hidden')
+        props.history.push(props.location.pathname)
+
+        searchDefaultFilters(selectedTypes)
+    }
+
+    function findFilter(type) {
+        let filter = filters.find(f => f.type === type)
+        if (filter != undefined) {
+            return filter.id
+        }
+        return 'all'
+    }
+
     function selectCheckBox(name) {
         setCheckboxes({
             ...checkboxes,
@@ -222,7 +196,8 @@ function Material_Reservation(props) {
         })
     }
 
-    function onChange(name) {
+    function onChangeCheckbox(name) {
+
         selectCheckBox(name)
 
         if (selectedTypes.find(t => t.id == name) != undefined)
@@ -234,6 +209,25 @@ function Material_Reservation(props) {
             setSelectedTypes(newTypes)
         }
 
+    }
+
+
+    function createCheckBoxes() {
+        return materialTypes.map(t => {
+            return (
+                <Grid.Column key={t.id}>
+                    <Card centered key={t.id}>
+                        <Card.Header>{t.name}</Card.Header>
+                        <Card.Description>{t.id}</Card.Description>
+                        <Card.Content extra>
+                            {
+                                checkboxes[t.id] === true ? <Button fluid color='green' onClick={() => onChangeCheckbox(t.id)}> Selected! </Button>
+                                    : <Button fluid onClick={() => onChangeCheckbox(t.id)}> Select </Button>
+                            }
+                        </Card.Content>
+                    </Card>
+                </Grid.Column>)
+        })
     }
 
     const gridStyle = {
@@ -248,27 +242,27 @@ function Material_Reservation(props) {
             <SemanticToastContainer />
             {
                 error ? error :
-                        <div>
-                            <Header size='medium'>Material:</Header>
-                            <div style={style}>
-                                <Filter changeFilter={changeFilter} name="sci_area" title="Scientific Area" types={sci_areas} value={findFilter("sci_area")} />
-                            </div>
-                            <div style={style}>
-                                <Filter changeFilter={changeFilter} name="subject" title="Subjects" types={subjects} value={findFilter("subject")} />
-                            </div>
-                            <Button basic size='small' onClick={filterTypesEvent} icon='filter alternate' content='Filter' />
-                            <Button basic size='small' id="reset_filter" style={{ ...style, visibility: "collapse" }} onClick={resetFilter} content='Reset' />
-                            <div>
-                                <Button className="ui medium labeled icon button" onClick={onSubmit} icon='add' content='Add Material to Reservation' />
-                            </div>
-                            <Divider />
-
-                            <Grid columns={4} style={gridStyle}>
-                                {
-                                    createCheckBoxes()
-                                }
-                            </Grid>
+                    <div>
+                        <Header size='medium'>Material:</Header>
+                        <div style={style}>
+                            <Filter changeFilter={onChangeFilter} name="sci_area" title="Scientific Area" types={sci_areas} value={findFilter("sci_area")} optionAll={findFilter("sci_area") == 'all'} />
                         </div>
+                        <div style={style}>
+                            <Filter changeFilter={onChangeFilter} name="subject" title="Subjects" types={subjects} value={findFilter("subject")} optionAll={findFilter("subject") == 'all'} />
+                        </div>
+                        <Button basic size='small' onClick={filterTypesEvent} icon='filter alternate' content='Filter' />
+                        <Button basic size='small' id="reset_filter" style={{ ...style, visibility: reset }} onClick={resetFilter} content='Reset' />
+                        <div>
+                            <Button className="ui medium labeled icon button" onClick={onSubmit} icon='add' content='Add Material to Reservation' />
+                        </div>
+                        <Divider />
+
+                        <Grid columns={4} style={gridStyle}>
+                            {
+                                createCheckBoxes()
+                            }
+                        </Grid>
+                    </div>
             }
         </div>
     )

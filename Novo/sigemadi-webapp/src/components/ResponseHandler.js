@@ -15,6 +15,7 @@ const Handler = (response) => {
             size: 'mini',
             description: 'Something went wrong, please try again later!'
         })
+        return <Page500 /> 
     }
 
     else if (response.status == 201 || response.status == 200) {
@@ -43,7 +44,7 @@ const Handler = (response) => {
         if (response.status == 404) {
             return <Page404 />
         }
-        if (response.status == 500) {
+        if (response.status == 500 || response.status == 504) {
             return <Page500 />
         }
     }

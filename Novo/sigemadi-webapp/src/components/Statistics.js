@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import {
-    BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
-} from 'recharts';
+import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,} from 'recharts';
 import { Header, Divider, Button, Statistic } from 'semantic-ui-react'
 import ResponseHandler from './ResponseHandler'
 import {
@@ -21,12 +19,11 @@ import {
 import { SemanticToastContainer } from 'react-semantic-toasts'
 import Date from './Utils/Date';
 import Filter from './Utils/Filter';
-import { MonthInput } from 'semantic-ui-calendar-react';
 import MonthCalendar from './Utils/Month';
 import YearCalendar from './Utils/Year';
 
 
-function Statistics(props) {
+function Statistics() {
 
     const [types, setTypes] = useState([])
 

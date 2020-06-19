@@ -17,7 +17,9 @@ const Filter = (props) => {
                     props.title ? <label style={{ margin: 10 }}>Filter by {props.title}:</label> : null
                 }
                 <select value={props.value} onChange={changeFilter}>
-                    <option value='all' key='all'>All</option>
+                    {
+                        props.optionAll ? <option value='all' key='all'>All</option> : null
+                    }
                     {
 
                         props.types.map(t => {

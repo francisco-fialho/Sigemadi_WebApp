@@ -14,8 +14,9 @@ function Request(props) {
     const scrollObserve = useRef()
 
     const [requests, setRequests] = useState([])
-    const [userId, setUserId] = useState(null)
+    const [userId, setUserId] = useState('')
     const [date, setDate] = useState('')
+    const [reset, setReset] = useState('hidden')
     const [requestType, setRequestType] = useState({ type: '', id: '' })
 
     const [showLoading, setShowLoading] = useState(false)
@@ -48,6 +49,7 @@ function Request(props) {
                 id: value
             }
             setRequestType(active)
+            setReset('visible')
 
             if (userid != undefined) {
                 setUserId(userid.value)
@@ -87,30 +89,11 @@ function Request(props) {
             const newPage = page + 1
             setPage(newPage)
             setShowLoading(true)
-            if (userId != null) searchUserRequests(userId, requestType.id, newPage, requests)
+            if (userId != '') searchUserRequests(userId, requestType.id, newPage, requests)
             else searchRequest(requestType.id, date, newPage, requests)
-        }
-        if (date != '' || (requestType.id != '' && requestType.id != 'all') || userId != null && !error) {
-            const resetButton = document.getElementById("resetbutton")
-            const visible = "visible"
-            resetButton.style.visibility = visible
         }
     }, [scrollRadio])
 
-
-    function setDay(date) {
-        const resetButton = document.getElementById("resetbutton")
-        resetButton.style.visibility = "visible"
-        setDate(date)
-    }
-
-    function newRequest() {
-        props.history.push('/auth/staff/newrequest/material')
-    }
-
-    function onClickRequest(id) {
-        props.history.push(props.location.pathname + `/${id}`)
-    }
 
 
     function searchUserRequests(id, requestState, pageNumber, requestsAdded) {
@@ -190,6 +173,8 @@ function Request(props) {
                 const data = resp.data['requests']
                 if (data.length === 0 && requestsAdded.length === 0) {
                     setShowLoading(false)
+                    setRequests(data)
+                    setMoreData(false)
                     return toast({
                         type: 'error',
                         title: 'Something went wrong',
@@ -211,11 +196,21 @@ function Request(props) {
     }
 
 
+    function setDay(date) {
+        setDate(date)
+    }
+
+    function newRequest() {
+        props.history.push('/auth/staff/newrequest/material')
+    }
+
+    function onClickRequest(id) {
+        props.history.push(props.location.pathname + `/${id}`)
+    }
+
 
 
     function resetSearch() {
-        const resetButton = document.getElementById("resetbutton")
-        resetButton.style.visibility = "hidden"
         props.history.push(props.location.pathname)
         document.getElementById("searchUser").value = ""
 
@@ -226,33 +221,34 @@ function Request(props) {
         setDate(newDate)
         setMoreData(true)
         setRequestType(type)
-        setUserId(null)
+        setUserId('')
         setRequests([])
         setShowLoading(true)
+        setReset('hidden')
         searchRequest(type.id, newDate, newPage, [])
     }
 
-    function onChangeOption(value) {
-        if (value.id != 'all')
-            setRequestType(value)
-    }
-
-
-    function onClickFilters() {
+    function onSubmitFilters() {
+        if (requestType.id == 'all' && userId == '' && date == '') return
         const newPage = 1
         setPage(newPage)
         setMoreData(true)
         setShowLoading(true)
-        if (userId != null) {
+        setReset('visible')
+        if (userId != '') {
+            setDate('')
             searchUserRequests(userId, requestType.id, newPage, [])
         }
         else {
             searchRequest(requestType.id, date, newPage, [])
         }
-        const resetButton = document.getElementById("resetbutton")
-        const visible = "visible"
-        resetButton.style.visibility = visible
     }
+
+    function onChangeType(value) {
+        if (value.id != 'all')
+            setRequestType(value)
+    }
+
     const style = {
         height: 30,
         margin: 6,
@@ -302,12 +298,12 @@ function Request(props) {
                             <Input size='mini' id='searchUser' onChange={(event, object) => setUserId(object.value)} type="text" placeholder="Introduce student number" icon='users' style={{ float: 'right' }} />
 
                             <div style={{ display: 'block', marginBottom: '1%', float: 'left' }}>
-                                <Filter changeFilter={onChangeOption} name="type" title='Type' types={requestTypes} value={requestType.id} />
+                                <Filter changeFilter={onChangeType} name="type" title='Type' types={requestTypes} value={requestType.id} optionAll={requestType.id == 'all'} />
                             </div>
                         </div>
-                        <div style={{ display: 'block', marginTop: '2%'}}>
-                        <Button size='large' basic content='Search' icon='search' onClick={onClickFilters}></Button>
-                            <Button size='large' basic style={{ visibility: 'hidden' }} id="resetbutton" content='Reset' onClick={resetSearch}></Button>
+                        <div style={{ display: 'block', marginTop: '2%', marginLeft: '6%', }}>
+                            <Button size='large' basic content='Search' icon='search' onClick={onSubmitFilters} />
+                            <Button size='large' basic style={{ visibility: reset }} id="resetbutton" content='Reset' onClick={resetSearch}></Button>
                         </div>
                         <Divider />
                         <div style={{ display: 'block' }}>
@@ -327,4 +323,4 @@ function Request(props) {
     )
 }
 
-export default Request  
+export default Request

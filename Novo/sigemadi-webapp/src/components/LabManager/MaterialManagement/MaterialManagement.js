@@ -40,7 +40,7 @@ function Material_Management(props) {
     const intersectionObserver = new IntersectionObserver((entries) => {
         const radio = entries[0].intersectionRatio
         setScollRadio(radio)
-    },scrollOptions)
+    }, scrollOptions)
 
     useEffect(() => {
         if (scrollRadio >= 0 && moreData && searchFilters != null && !showLoading) {
@@ -92,9 +92,6 @@ function Material_Management(props) {
             .catch(err => setError(Response_Handler(err.response)))
     }
 
-    function onSubmit() {
-        props.history.push('/auth/labmanager/addmaterial')
-    }
 
     function deleteMaterial(id) {
         const deleteButton = document.getElementById('delete' + id)
@@ -117,6 +114,7 @@ function Material_Management(props) {
 
         if (bulkMaterial.id)
             setBulkMaterial({})
+
         setModal(false)
     }
 
@@ -130,9 +128,13 @@ function Material_Management(props) {
         setBulkMaterial({ ...bulkMaterial, delete_quantity: value })
     }
 
-    async function deleteBulkMaterial(material) {
+    function deleteBulkMaterial(material) {
         setBulkMaterial({ ...material, delete_quantity: 1 })
         setModal(true)
+    }
+    
+    function onSubmit() {
+        props.history.push('/auth/labmanager/addmaterial')
     }
 
     function createMaterialList() {

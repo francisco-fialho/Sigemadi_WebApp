@@ -157,7 +157,7 @@ function Request_Details(props) {
         }
     }
 
-    function onReport(id, description) {
+    function onConfirmReport(id, description) {
         const confirmButton = document.getElementById('confirm' + id)
         const cancelButton = document.getElementById('cancel' + id)
         confirmButton.disabled = true
@@ -182,7 +182,7 @@ function Request_Details(props) {
             })
     }
 
-    function cancelReportAction(id) {
+    function onCancelReport(id) {
         const confirmButton = document.getElementById('confirm' + id)
         const cancelButton = document.getElementById('cancel' + id)
         confirmButton.disabled = true
@@ -235,15 +235,14 @@ function Request_Details(props) {
                     label={m.name + ' | ' + m.id + ' | ' + 'Quantity: ' + m.quantity}
                     isSelected={checkboxes[m.id]}
                     onCheckboxChange={onChange}
-                    onReport={onReport}
                     key={m.id}
                 >
                     {
                         (m.damage === undefined) ? null : (
                             <List.Content floated='right' >
                                 <Button.Group size='tiny'>
-                                    <Button id={'confirm' + m.id} size='tiny' color='green' onClick={() => onReport(m.id, m.damage.description)} icon='check' content='Confirm Damage' />
-                                    <Button id={'cancel' + m.id} size='tiny' onClick={() => cancelReportAction(m.id)} icon='close' content='Cancel' />
+                                    <Button id={'confirm' + m.id} size='tiny' color='green' onClick={() => onConfirmReport(m.id, m.damage.description)} icon='check' content='Confirm Damage' />
+                                    <Button id={'cancel' + m.id} size='tiny' onClick={() => onCancelReport(m.id)} icon='close' content='Cancel' />
                                 </Button.Group>
                             </List.Content>
                         )

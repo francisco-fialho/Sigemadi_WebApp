@@ -29,6 +29,7 @@ function New_Material(props) {
                         setSci_Area({ id: specific.id })
                         setSci_Areas([specific, geral])
                         setTypes(response.data['types'])
+                        setType(response.data['types'][0])
                     }).catch(err => setError(Response_Handler(err.response)))
             }).catch(err => setError(Response_Handler(err.response)))
     }, [])
@@ -63,8 +64,7 @@ function New_Material(props) {
         props.history.push('/auth/labmanager/material')
     }
 
-
-    function changeSci_Area(value) {
+    function onChangeArea(value) {
         if (value.id != 'all') {
             axios.get(sci_areaUrl.replace(':id', value.id))
                 .then(resp => {
@@ -75,12 +75,12 @@ function New_Material(props) {
     }
 
 
-    function changeType(value) {
+    function onChangeType(value) {
         if (value.id !== 'all')
             setType(value)
     }
 
-    function changeQuantity(value) {
+    function onChangeQuantity(value) {
         if (parseInt(value) < parseInt(MIN)) {
             setQuantity(MIN)
         }
@@ -102,14 +102,14 @@ function New_Material(props) {
                             <Card.Header>Add Material</Card.Header>
                             <Card.Meta style={{ marginTop: '2%' }}>
                                 <Card.Header >Scientific Area: </Card.Header>
-                                <Filter changeFilter={changeSci_Area} name="sci_area" types={sci_areas} value={sci_area.id} />
+                                <Filter changeFilter={onChangeArea} name="sci_area" types={sci_areas} value={sci_area.id} />
                                 <div style={{ display: 'block', float: 'right' }}>
                                     <Header size='medium'>Material Type:</Header>
-                                    <Filter changeFilter={changeType} name="type" types={types} value={type.id} />
+                                    <Filter changeFilter={onChangeType} name="type" types={types} value={type.id} />
                                 </div>
                                 <div style={{ float: 'left' }}>
                                     <Header size='medium'>Quantity:</Header>
-                                    <Input type="number" size='mini' required defaultValue={1} onChange={(event, object) => changeQuantity(object.value)} min={MIN} max={MAX} style={{ width: '90%' }}></Input>
+                                    <Input type="number" size='mini' required defaultValue={1} onChange={(event, object) => onChangeQuantity(object.value)} min={MIN} max={MAX} style={{ width: '90%' }}></Input>
                                 </div>
                             </Card.Meta>
                         </Card.Content>

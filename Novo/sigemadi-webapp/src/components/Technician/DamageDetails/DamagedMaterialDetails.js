@@ -29,7 +29,7 @@ const titles = [
 
 function Damaged_Material_Details(props) {
 
-    function buildInfoTable() {
+    function createInfoTable() {
         return titles.map(t => {
             if (props.material_report[t.value] === undefined) return null
             return (
@@ -45,7 +45,7 @@ function Damaged_Material_Details(props) {
         })
     }
 
-    function buildStateInfo() {
+    function createStateInfo() {
         let detail = props.material_report.state
         let color = 'red'
         if (props.history) {
@@ -59,7 +59,7 @@ function Damaged_Material_Details(props) {
         </Label>
     }
 
-    function buildInfo() {
+    function createDamageInfo() {
         if (props.history) {
             return (<Card fluid>
                 <Card.Content>
@@ -84,7 +84,7 @@ function Damaged_Material_Details(props) {
                     </Card.Content>
                     <Card.Content extra>
                         <ButtonGroup fluid>
-                            <Button basic color='green' id='confirm' onClick={props.onSave} content='Confirm' />
+                            <Button basic color='green' id='confirm' onClick={props.onConfirm} content='Confirm' />
                             <Button basic color='red' onClick={props.onCancel} content='Cancel' />
                         </ButtonGroup>
                     </Card.Content>
@@ -100,7 +100,7 @@ function Damaged_Material_Details(props) {
         <div>
             <Header size='medium'>Material Details</Header>
             {
-                buildStateInfo()
+                createStateInfo()
 
             }
             <Divider />
@@ -113,7 +113,7 @@ function Damaged_Material_Details(props) {
 
             <List divided>
                 {
-                    buildInfoTable()
+                    createInfoTable()
                 }
             </List>
             <CardGroup>
@@ -127,7 +127,7 @@ function Damaged_Material_Details(props) {
                     </Card.Content>
                 </Card>
                 {
-                    buildInfo()
+                    createDamageInfo()
                 }
             </CardGroup>
 

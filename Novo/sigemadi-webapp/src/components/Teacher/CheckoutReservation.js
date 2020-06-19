@@ -47,13 +47,6 @@ function Checkout_Reservation(props) {
     }, [])
 
 
-    function setDayTime(datetime) {
-        const [date, time] = datetime.split(" ")
-        setDate(date)
-        setTime(time)
-    }
-
-
     function onChangeQuantity(material, quantity) {
         if (parseInt(quantity) < parseInt(MIN)) quantity = MIN
         if (parseInt(quantity) > parseInt(MAX)) quantity = MAX
@@ -66,7 +59,7 @@ function Checkout_Reservation(props) {
         setMaterials(materialList)
     }
 
-    function changeFilter(value) {
+    function onChangeFilter(value) {
         if (value.id != 'all') {
             setSubject(value)
         }
@@ -156,7 +149,13 @@ function Checkout_Reservation(props) {
         }
     }
 
-    function onChangeGroups(quantity) {
+    function setDayTime(datetime) {
+        const [date, time] = datetime.split(" ")
+        setDate(date)
+        setTime(time)
+    }
+    
+    function onChangeGroupQuantity(quantity) {
         if (parseInt(quantity) < parseInt(MIN)) quantity = MIN
         if (parseInt(quantity) > parseInt(GROUP_MAX)) quantity = GROUP_MAX
         setGroups(quantity)
@@ -204,10 +203,10 @@ function Checkout_Reservation(props) {
                                 props.newReservation ?
                                     <div>
                                         Groups Quantity:
-                                        <Input size='small' onChange={(event, object) => onChangeGroups(object.value)} type="number" required min={MIN} max={GROUP_MAX} style={{ textAlign: 'center', width: '15%', marginRight: '15%' }}></Input>
+                                        <Input size='small' onChange={(event, object) => onChangeGroupQuantity(object.value)} type="number" required min={MIN} max={GROUP_MAX} style={{ textAlign: 'center', width: '15%', marginRight: '15%' }}></Input>
                                         Subjects:
                                         <div style={{ display: 'inline-block' }}>
-                                            <Filter changeFilter={changeFilter} name='subject' types={subjects} value={findSubject()} />
+                                            <Filter changeFilter={onChangeFilter} name='subject' types={subjects} value={findSubject()} optionAll={findSubject() =='all'}/>
                                         </div>
                                         <Header size='small' style={{ marginTop: '5%' }}>Select a Date and Hour:</Header>
                                         <DateTime setDayTime={setDayTime} />

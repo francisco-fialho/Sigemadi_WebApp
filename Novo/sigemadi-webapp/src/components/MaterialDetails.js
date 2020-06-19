@@ -49,7 +49,7 @@ function Material_Details(props) {
     }, [])
 
 
-    function buildMaterialInfo(values) {
+    function createMaterialInfo(values) {
         return values.map((value, i) => {
             if (i + 1 === values.length) {
                 return value
@@ -66,12 +66,12 @@ function Material_Details(props) {
     }
 
 
-    function buildInfoTable() {
+    function createInfoTable() {
         return titles.map(t => {
             let value = material[t.value]
             if (t.value === 'subjects'){
                 if (material.id.slice(0,2)=='00') value = 'All Subjects'
-                else value = buildMaterialInfo(value)
+                else value = createMaterialInfo(value)
             } 
             return (
                 <List.Item key={t.title}>
@@ -125,7 +125,7 @@ function Material_Details(props) {
 
                             <List divided>
                                 {
-                                    buildInfoTable(this)
+                                    createInfoTable(this)
                                 }
                             </List>
                             {

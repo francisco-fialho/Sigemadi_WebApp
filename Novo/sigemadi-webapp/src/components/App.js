@@ -19,7 +19,7 @@ import MaterialDetails from './MaterialDetails'
 
 /** STAFF */
 import Staff from './Staff/Staff'
-import Request from './Staff/Request'
+import Request from './Staff/Requests'
 import RequestDetails from './Staff/RequestDetails'
 import MaterialRequest from './Staff/MaterialRequest'
 import CheckoutRequest from './Staff/CheckoutRequest'
@@ -33,6 +33,8 @@ import ScientificAreasManagement from './Administrator/ScientificAreasManagement
 /** TEACHER */
 import MaterialReservation from './Teacher/MaterialReservation'
 import CheckoutReservation from './Teacher/CheckoutReservation'
+import Reservation from './Teacher/Reservations'
+import ReservationDetails from './Teacher/ReservationDetails'
 
 /** TECHNICIAN */
 import DamagedMaterial from './Technician/DamageMaterials/DamagedMaterialActive'
@@ -44,8 +46,6 @@ import DamagedMaterialHistory from './Technician/DamageMaterials/DamagedMaterial
 import MaterialManagement from './LabManager/MaterialManagement/MaterialManagement'
 import NewMaterial from './LabManager/MaterialManagement/NewMaterial'
 import NewType from './LabManager/TypeManagement/NewType'
-import Reservation from './Teacher/Reservation'
-import ReservationDetails from './Teacher/ReservationDetails'
 import SubjectsManagement from './Administrator/SubjectsManagement'
 import TypeManagement from './LabManager/TypeManagement/TypeManagement'
 
@@ -93,7 +93,7 @@ function App(props) {
 
                 <Route path='/auth/admin/areas/:id/course' render={(props) => <HeaderAdmin><SubjectsManagement {...props} /> </HeaderAdmin>} />
 
-                <Route path='/auth/admin/statistics' render={(props) => <HeaderAdmin><Statistics {...props} /> </HeaderAdmin>} />
+                <Route path='/auth/admin/statistics' render={(props) => <HeaderAdmin><Statistics /> </HeaderAdmin>} />
 
                 <Route exact path='/auth/teacher' render={(props) => <HeaderTeacher><ProfilePage role='Teacher' /> </HeaderTeacher>} />
                 <Route exact path='/auth/teacher/material' render={(props) => <HeaderTeacher><Material {...props} /> </HeaderTeacher>} />

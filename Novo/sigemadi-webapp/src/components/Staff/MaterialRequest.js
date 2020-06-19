@@ -79,6 +79,17 @@ function Material_Request(props) {
     }, [materials, id])
 
 
+    function setFilters(filter) {
+        if (!filter) filter = ''
+        const newPage = 1
+        setPage(newPage)
+        setMaterials([])
+        setMoreData(true)
+        setShowLoading(true)
+        searchMaterial(filter, newPage, [])
+    }
+
+
     function searchMaterial(filters, pageNumber, materialAdded) {
         let url = filters
         if (!url) url += '?'
@@ -105,10 +116,6 @@ function Material_Request(props) {
                 newMaterial.push(...data)
                 await setMaterials(newMaterial)
                 setShowLoading(false)
-                // data.map(m => {
-                //     if (selectedMaterials.find(material => m.id == material.id))
-                //         selectCheckBox(m.id)
-                // })
                 setSearchFilters(filters)
             })
             .catch(err => setError(Response_Handler(err.response)))
@@ -123,18 +130,25 @@ function Material_Request(props) {
 
         let checkMaterial = selectedMaterials.filter(m => materials.find(material => material.id == m.id) == undefined)
 
+        if (checkMaterial.length > 0) {
+            let material = '?material='
+            checkMaterial.map((m, idx) => {
+                material += m.id
+                if (idx + 1 != checkMaterial.length)
+                    material += ','
+            })
 
-        
 
-        await Promise.all(
-            checkMaterial.map(async (m, idx) => {
-                const resp = await axios.get(materialUrl.replace(':id', m.id))
-                if (resp.data.can_be_reported) {
-                    selectedAvailableMaterial.push({...resp.data,id:m.id})
+            const resp = await axios.get(materialsUrl + material)
+
+            resp.data['materials'].map(m => {
+                if (m.can_be_reported) {
+                    selectedAvailableMaterial.push(m)
                 }
             })
-        )
-        
+        }
+
+
         if (selectedAvailableMaterial.length === 0) {
             return toast({
                 type: 'warning',
@@ -168,7 +182,7 @@ function Material_Request(props) {
         console.error(err)
     }
 
-    function onSubmit() {
+    function onSubmitQrCode() {
         if (result != null) {
             handleClose()
             const id = result
@@ -233,21 +247,10 @@ function Material_Request(props) {
     }
 
 
-    function setFilters(filter) {
-        if (!filter) filter = ''
-        const newPage = 1
-        setPage(newPage)
-        setMaterials([])
-        setMoreData(true)
-        setShowLoading(true)
-        searchMaterial(filter, newPage, [])
-    }
-
-
     function createCheckBoxes() {
         return materials.map(m => {
             return (
-                <Grid.Column onSubmit={onSubmit} key={m.id}>
+                <Grid.Column key={m.id}>
                     <Card centered key={m.id}>
                         <Card.Header>{m.name}</Card.Header>
                         <Card.Description>{m.id}</Card.Description>
@@ -303,7 +306,7 @@ function Material_Request(props) {
                             </Modal.Content>
                             <Modal.Actions>
                                 <ButtonGroup fluid>
-                                    <Button basic color='green' onClick={onSubmit} content='Confirm' inverted></Button>
+                                    <Button basic color='green' onClick={onSubmitQrCode} content='Confirm' inverted></Button>
                                     <Button basic color='red' onClick={handleClose} content='Cancel' inverted></Button>
                                 </ButtonGroup>
                             </Modal.Actions>

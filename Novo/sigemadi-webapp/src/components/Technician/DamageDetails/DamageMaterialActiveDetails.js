@@ -34,7 +34,7 @@ function Damage_Material_Active_Details(props) {
         props.history.push(props.location.pathname.replace(`/${material_report.id}`,''))
     }
 
-    function onSave() {
+    function onConfirm() {
         const button = document.getElementById('confirm')
         if (material_report.report === undefined) {
             return toast({
@@ -65,7 +65,7 @@ function Damage_Material_Active_Details(props) {
             })
     }
 
-    function changeState(value) {
+    function onChangeState(value) {
         if (value === 'all') return
         setMaterial_Report({
             ...material_report,
@@ -80,10 +80,10 @@ function Damage_Material_Active_Details(props) {
                 error ? error :
                     !material_report.id ? <Message>Loading...<Icon name='circle notched' loading /></Message> :
                         <DamagedMaterialDetails
-                            changeState={changeState}
+                            changeState={onChangeState}
                             material_report={material_report}
                             changeMaterialReport={(value) => setMaterial_Report(value)}
-                            onSave={onSave}
+                            onConfirm={onConfirm}
                             onCancel={onCancel}
                         />
             }

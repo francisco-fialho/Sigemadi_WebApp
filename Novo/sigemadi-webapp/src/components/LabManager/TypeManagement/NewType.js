@@ -3,7 +3,6 @@ import CheckBox from '../../CheckBox/CheckBox'
 import Filter from '../../Utils/Filter'
 import axios from 'axios'
 import { Card, Header, Segment, Form, TextArea, ButtonGroup, Button, Grid } from 'semantic-ui-react'
-import Cookies from 'universal-cookie'
 import { sci_areasUrl, sci_areaUrl, subjectsUrl, typeSci_AreaUrl } from '../../Utils/Links'
 import { SemanticToastContainer, toast } from 'react-semantic-toasts';
 import Response_Handler from '../../ResponseHandler'
@@ -122,7 +121,7 @@ function New_Type(props) {
     }
 
 
-    function changeSci_Area(value) {
+    function onChangeArea(value) {
         if (value.id === 'all') value = ''
         else {
             if (value.id == '0') {
@@ -145,7 +144,7 @@ function New_Type(props) {
         )
     }
 
-    function onChange(event) {
+    function onChangeCheckbox(event) {
         const { name } = event.target
         selectCheckBox(name)
     }
@@ -158,7 +157,7 @@ function New_Type(props) {
                     name={s.id}
                     label={s.name}
                     isSelected={checkboxes[s.id]}
-                    onCheckboxChange={onChange}
+                    onCheckboxChange={onChangeCheckbox}
                     key={s.type}
                 />
 
@@ -186,7 +185,7 @@ function New_Type(props) {
 
                                     <Card.Header >Scientific Area:</Card.Header>
 
-                                    <Filter changeFilter={changeSci_Area} name="sci_area" types={sci_areas} value={sci_area.id} />
+                                    <Filter changeFilter={onChangeArea} name="sci_area" types={sci_areas} value={sci_area.id} />
                                     <div style={{ marginTop: '2%' }}>
 
                                         <Header>Subjects:</Header>

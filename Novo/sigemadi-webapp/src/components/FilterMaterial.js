@@ -16,6 +16,7 @@ function FilterMaterial(props) {
     const [sci_areas, setSci_Areas] = useState([])
     const [filters, setFilters] = useState([])
     const [ready, setReady] = useState(false)
+    const [reset, setReset] = useState('collapse')
     const [error, setError] = useState(null)
 
     useEffect(() => {
@@ -31,11 +32,7 @@ function FilterMaterial(props) {
             } while (!next.done)
 
             setFilters(filtersUrl)
-
-            if (filtersUrl.length > 0) {
-                const resetButton = document.getElementById("reset_filter")
-                resetButton.style.visibility = "visible"
-            }
+            setReset('visible')
             searchDefaultFilters(true)
         }
         else {
@@ -205,18 +202,6 @@ function FilterMaterial(props) {
     }
 
 
-    function changeFilters(filter) {
-        let changed = filters
-        const idx = changed.findIndex(f => f.type === filter.type)
-        if (idx > -1) {
-            changed[idx] = filter
-        }
-        else {
-            changed.push(filter)
-        }
-        setFilters(changed)
-    }
-
 
 
 
@@ -239,24 +224,30 @@ function FilterMaterial(props) {
     }
 
     function onChangeFilter(filter) {
-        if (filters.length === 0) {
-            const resetButton = document.getElementById("reset_filter")
-            resetButton.style.visibility = "visible"
-        }
         if (filter.id != 'all') {
             changeFilters(filter)
             applyFilters([filter])
         }
     }
 
+    function changeFilters(filter) {
+        setReset('visible')
+        let changed = filters
+        const idx = changed.findIndex(f => f.type === filter.type)
+        if (idx > -1) {
+            changed[idx] = filter
+        }
+        else {
+            changed.push(filter)
+        }
+        setFilters(changed)
+    }
+
     function filterMaterialEvent(event) {
         event.preventDefault()
-        const resetButton = document.getElementById("reset_filter")
 
         if (filters.length > 0) {
-
             const search = searchUrl(filters)
-            resetButton.style.visibility = "visible"
 
             if (props.updateUrl) {
                 props.history.push({
@@ -272,8 +263,7 @@ function FilterMaterial(props) {
 
     function resetFilter(event) {
         event.preventDefault()
-        const resetButton = document.getElementById("reset_filter")
-        resetButton.style.visibility = "hidden"
+        setReset('hidden')
         props.history.push(props.location.pathname)
         searchDefaultFilters()
         setFilters([])
@@ -302,16 +292,16 @@ function FilterMaterial(props) {
                     <div>
 
                         <div style={style}>
-                            <Filter changeFilter={onChangeFilter} name="sci_area" title="Scientific Areas" types={sci_areas} value={findFilter('sci_area')} />
+                            <Filter changeFilter={onChangeFilter} name="sci_area" title="Scientific Areas" types={sci_areas} value={findFilter('sci_area')} optionAll={findFilter('sci_area') == 'all'} />
                         </div>
                         <div style={style}>
-                            <Filter changeFilter={onChangeFilter} name="subject" title="Subjects" types={subjects} value={findFilter('subject')} />
+                            <Filter changeFilter={onChangeFilter} name="subject" title="Subjects" types={subjects} value={findFilter('subject')} optionAll={findFilter('subject') == 'all'} />
                         </div>
                         <div style={style}>
-                            <Filter changeFilter={onChangeFilter} name="type" title="Material Types" types={materialTypes} value={findFilter('type')} />
+                            <Filter changeFilter={onChangeFilter} name="type" title="Material Types" types={materialTypes} value={findFilter('type')} optionAll={findFilter('type') == 'all'} />
                         </div>
                         <Button basic size='small' content='Filter' icon='filter' onClick={filterMaterialEvent}></Button>
-                        <Button basic size='small' content='Reset' icon='filter' id='reset_filter' onClick={resetFilter} style={{ ...style, visibility: "collapse" }}></Button>
+                        <Button basic size='small' content='Reset' icon='filter' id='reset_filter' onClick={resetFilter} style={{ ...style, visibility: reset }}></Button>
                     </div>
             }
         </div>

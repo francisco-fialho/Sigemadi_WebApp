@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Header, Card, Segment, TextArea, ButtonGroup, Button, Form, Divider } from 'semantic-ui-react'
-import Cookies from 'universal-cookie'
 import { materialUrl, reportMaterialUrl } from './Utils/Links'
 import { SemanticToastContainer, toast } from 'react-semantic-toasts'
 import Response_Handler from './ResponseHandler'
 
-const cookie = new Cookies()
 
 function Report_Material(props) {
 

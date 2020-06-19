@@ -12,8 +12,8 @@ function Define_Roles(props) {
 
     const [roles, setRoles] = useState([])
     const [person, setPerson] = useState({})
-    const [sci_area, setSci_Area] = useState('all')
-    const [sci_areas, setSci_Areas] = useState('all')
+    const [sciArea, setSciArea] = useState('all')
+    const [sciAreas, setSciAreas] = useState('all')
     const [checkboxes, setCheckboxes] = useState([])
     const [error, setError] = useState(null)
 
@@ -38,9 +38,9 @@ function Define_Roles(props) {
                             }, 3000)
                         }
                         else {
-                            let all_sci_areas = resp_sciareas.data['sci_areas']
-                            all_sci_areas.shift()
-                            setSci_Areas(all_sci_areas)
+                            let allSciAreas = resp_sciareas.data['sci_areas']
+                            allSciAreas.shift()
+                            setSciAreas(allSciAreas)
 
                             axios.get(rolesUrl)
                                 .then(resp_roles => {
@@ -52,7 +52,7 @@ function Define_Roles(props) {
                                             const user_roles = r.data['roles']
                                             let availableRoles = resp_roles.data['roles'].filter(r => r != 'student' && r != 'staff')
 
-                                            const selectedRoles = selectUserRoles(availableRoles, user_roles, all_sci_areas)
+                                            const selectedRoles = selectUserRoles(availableRoles, user_roles, allSciAreas)
 
                                             setRoles(selectedRoles)
                                             setCheckboxes(selectedRoles.reduce(
@@ -72,16 +72,12 @@ function Define_Roles(props) {
 
     }, [])
 
-    function changeArea(value) {
-        if (value != 'all')
-            setSci_Area(value)
-    }
 
-    function selectUserRoles(availableRoles, user_roles, sci_areas) {
+    function selectUserRoles(availableRoles, user_roles, sciAreas) {
 
         const role = user_roles.find(r => r.name == 'lab_responsible')
         if (role != undefined) {
-            setSci_Area(sci_areas.find(s => s.id === role.sci_area_id).name)
+            setSciArea(sciAreas.find(s => s.id === role.sci_area_id).name)
         }
 
         return availableRoles.map(r => {
@@ -93,6 +89,11 @@ function Define_Roles(props) {
                 selected: selected
             }
         })
+    }
+    
+    function onChangeArea(value) {
+        if (value != 'all')
+            setSciArea(value)
     }
 
     function createCheckBoxes() {
@@ -108,7 +109,7 @@ function Define_Roles(props) {
                 {
                     r.name === 'lab_responsible' ?
                         <div >
-                            <Option values={sci_areas.map(a => a.name)} value={sci_area} changeOption={changeArea} defaultValue="Scientific Area"></Option>
+                            <Option values={sciAreas.map(a => a.name)} value={sciArea} changeOption={onChangeArea} defaultValue={sciArea == 'all' ? "Scientific Area" : null}></Option>
                         </div> :
                         null
                 }
@@ -126,7 +127,7 @@ function Define_Roles(props) {
 
         let idx = ''
         if ((idx = checked.findIndex(r => r.role === 'lab_responsible')) >= 0) {
-            if (sci_area === 'all')
+            if (sciArea === 'all')
                 return toast({
                     type: 'warning',
                     title: 'Missing Information',
@@ -134,10 +135,10 @@ function Define_Roles(props) {
                     time: 2000,
                     size: 'mini'
                 })
-            
+
             checked[idx] = {
                 role: 'lab_responsible',
-                sci_area: sci_area
+                sci_area: sciArea
             }
         }
         confirmButton.disabled = true

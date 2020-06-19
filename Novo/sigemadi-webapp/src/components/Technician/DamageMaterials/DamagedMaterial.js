@@ -6,7 +6,7 @@ import { Header, Card, Button, Grid, Divider } from 'semantic-ui-react'
 
 function Damaged_Material(props) {
 
-    function buildMaterialList() {
+    function createMaterialList() {
         return props.material.map(m => {
             return (
                 <Grid.Column>
@@ -37,7 +37,7 @@ function Damaged_Material(props) {
                 (props.material.length === 0 && !props.moreData) ? <Header size='small' >There is no Damages Reported</Header> :
                     <Grid columns={4} style={style}>
                         {
-                            buildMaterialList()
+                            createMaterialList()
                         }
                     </Grid>
             }
