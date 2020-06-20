@@ -13,6 +13,7 @@ function Damage_Material_Active_Details(props) {
         states: []
     })
     const [error, setError] = useState(null)
+    const [disableButton,setDisableButton] = useState(false)
 
 
     useEffect(() => {
@@ -35,7 +36,6 @@ function Damage_Material_Active_Details(props) {
     }
 
     function onConfirm() {
-        const button = document.getElementById('confirm')
         if (material_report.report === undefined) {
             return toast({
                 type: 'warning',
@@ -54,14 +54,14 @@ function Damage_Material_Active_Details(props) {
                 size: 'mini'
             })
         }
-        button.disabled = true
+        setDisableButton(true)
         axios.patch(damageUrl.replace(':id', material_report.id), { "state": material_report.state, "report": material_report.report })
             .then(resp => {
                 Response_Handler(resp)
                 setTimeout(() => props.history.push('/auth/tech/damages'), 3000)
             }).catch(err => {
                 Response_Handler(err.response)
-                button.disabled = false
+                setDisableButton(false)
             })
     }
 
@@ -84,6 +84,7 @@ function Damage_Material_Active_Details(props) {
                             material_report={material_report}
                             changeMaterialReport={(value) => setMaterial_Report(value)}
                             onConfirm={onConfirm}
+                            buttonState={disableButton}
                             onCancel={onCancel}
                         />
             }

@@ -12,6 +12,8 @@ function Scientific_Areas_Management(props) {
     const [sci_areas, setSci_Areas] = useState([])
     const [sci_area, setSci_Area] = useState('')
     const [error, setError] = useState(null)
+
+    
     useEffect(() => {
         getSci_Areas()
     }, [])

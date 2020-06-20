@@ -11,18 +11,18 @@ function Report_Material(props) {
     const [description, setDescription] = useState('')
     const [material, setMaterial] = useState(null)
     const [user, setUser] = useState(null)
+    const [disableButton,setDisableButton] = useState(false)
 
 
     useEffect(() => {
-        const confirmButton = document.getElementById('confirm')
 
         const userId = JSON.parse(localStorage.getItem('userinfo')).id
         setUser(userId)
         const materialId = props.match.params['id']
         if (materialId.slice(0, 2) == '00') {
-            confirmButton.disabled = true
+            setDisableButton(true)
 
-            props.history.push(props.location.pathname.replace('/report', '/material'))
+            props.history.push(props.location.pathname.replace('/report', ''))
         }
 
 
@@ -31,7 +31,7 @@ function Report_Material(props) {
                 if (resp.data['state'] === 'available')
                     setMaterial(materialId)
                 else {
-                    props.history.push(props.location.pathname.replace('/report', '/material'))
+                    props.history.push(props.location.pathname.replace('/report', ''))
                 }
             })
             .catch(err => {
@@ -41,8 +41,6 @@ function Report_Material(props) {
     }, [])
 
     function onConfirm() {
-        const confirmButton = document.getElementById('confirm')
-
         if (description == '' || description.trimLeft().length == 0) {
             return toast({
                 type: 'warning',
@@ -53,7 +51,7 @@ function Report_Material(props) {
             })
         }
 
-        confirmButton.disabled = true
+        setDisableButton(true)
 
         axios.post(reportMaterialUrl.replace(':id', material), { "description": description, "user": user })
             .then(resp => {
@@ -63,7 +61,7 @@ function Report_Material(props) {
                 }, 3000)
             })
             .catch(err => {
-                confirmButton.disabled = false
+                setDisableButton(false)
                 Response_Handler(err.response)
             })
 
@@ -94,7 +92,7 @@ function Report_Material(props) {
                     </Card.Description>
                 </Card.Content>
                 <ButtonGroup fluid>
-                    <Button basic id='confirm' color='green' onClick={onConfirm} content='Confirm' />
+                    <Button basic id='confirm' color='green' onClick={onConfirm} disabled={disableButton} content='Confirm' />
                     <Button basic color='red' onClick={onCancel} content='Cancel' />
                 </ButtonGroup>
                 <Card.Content extra>

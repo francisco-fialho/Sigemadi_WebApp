@@ -17,6 +17,8 @@ function New_Material(props) {
     const [sci_area, setSci_Area] = useState('')
     const [quantity, setQuantity] = useState(1)
     const [error, setError] = useState(null)
+    const [disableButton,setDisableButton] = useState(false)
+
 
     useEffect(() => {
         const role = JSON.parse(localStorage.getItem('userinfo')).roles.find(role => role.name === 'lab_responsible')
@@ -45,8 +47,7 @@ function New_Material(props) {
             })
         }
         
-        const button = document.getElementById('confirm')
-        button.disabled = true
+        setDisableButton(true)
 
         axios.post(materialsUrl, { "quantity": quantity, "type": type.id })
             .then(resp => {
@@ -54,7 +55,7 @@ function New_Material(props) {
                 setTimeout(() => props.history.push(props.location.pathname.replace('/addmaterial', '/material')), 3000)
             })
             .catch(err => {
-                button.disabled = false
+                setDisableButton(false)
                 Response_Handler(err.response)
             })
 
@@ -115,7 +116,7 @@ function New_Material(props) {
                         </Card.Content>
                         <Card.Content extra>
                             <ButtonGroup fluid>
-                                <Button basic id='confirm' color='green' content='Confirm' onClick={onConfirm}></Button>
+                                <Button basic id='confirm' color='green' content='Confirm' disabled={disableButton} onClick={onConfirm}></Button>
                                 <Button basic color='red' content='Cancel' onClick={onCancel}></Button>
                             </ButtonGroup>
                         </Card.Content>

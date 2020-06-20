@@ -17,6 +17,7 @@ function Checkout_Request(props) {
     const [name, setName] = useState('Name')
     const [photo, setPhoto] = useState(ProfilePicMatthew)
     const [error, setError] = useState(null)
+    const [disableButton,setDisableButton] = useState(false)
 
     useEffect(() => {
         const requestId = props.match.params.id
@@ -141,13 +142,12 @@ function Checkout_Request(props) {
     }
 
     function onSubmit() {
-        const submitButton = document.getElementById('submit')
 
         if (id != 'ID') {
 
             const material = checkMaterialQuantity()
             if (material === null) return
-            submitButton.disabled = true
+            setDisableButton(true)
 
             if (requestId === null) {
                 axios.post(requestsUrl, { 'materials_requested': material, 'user_id': id })
@@ -159,7 +159,7 @@ function Checkout_Request(props) {
                         }, 3000)
                     }).catch(err => {
                         Response_Handler(err.response)
-                        submitButton.disabled = false
+                        setDisableButton(false)
                     })
             }
             else {
@@ -171,8 +171,8 @@ function Checkout_Request(props) {
                             props.history.push(`/auth/staff/request/${requestId}`)
                         }, 3000)
                     }).catch(err => {
-                        submitButton.disabled = false
                         Response_Handler(err.response)
+                        setDisableButton(false)
                     })
             }
         }
@@ -215,7 +215,7 @@ function Checkout_Request(props) {
                                     </Card.Content>
                                 </Card>
                                 <Divider />
-                                <Button id='submit' size='large' style={{ display: 'inline-block', float: 'right' }} onClick={onSubmit} icon='edit alternate' content='Request' />
+                                <Button id='submit' size='large' style={{ display: 'inline-block', float: 'right' }} disabled={disableButton} onClick={onSubmit} icon='edit alternate' content='Request' />
 
                                 <div style={{ display: 'block', marginTop: '5%' }}>
                                     <Header size='medium'>Material:</Header>

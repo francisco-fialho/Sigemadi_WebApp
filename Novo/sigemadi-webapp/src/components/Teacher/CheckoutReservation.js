@@ -21,6 +21,8 @@ function Checkout_Reservation(props) {
     const [subject, setSubject] = useState(null)
     const [groups, setGroups] = useState('')
     const [error, setError] = useState(null)
+    const [disableButton, setDisableButton] = useState(false)
+
 
     useEffect(() => {
         setUser(JSON.parse(localStorage.getItem('userinfo')))
@@ -112,7 +114,6 @@ function Checkout_Reservation(props) {
 
     function onSubmit() {
         const verified = verifyInformation()
-        const button = document.getElementById('reservation')
 
         let verifyQuantity = true
         const material = materials.map(m => {
@@ -133,7 +134,7 @@ function Checkout_Reservation(props) {
         })
 
         if (verifyQuantity && verified) {
-            button.disabled = true
+            setDisableButton(true)
             axios.post(reservationsUrl, { 'user_id': user.id, 'subject': subject.id, 'date': `${date} ${time}`, 'groups': groups, 'materials': material })
                 .then(resp => {
                     Response_Handler(resp)
@@ -143,7 +144,7 @@ function Checkout_Reservation(props) {
                     }, 3000)
                 })
                 .catch(err => {
-                    button.disabled = false
+                    setDisableButton(false)
                     Response_Handler(err.response)
                 })
         }
@@ -154,7 +155,7 @@ function Checkout_Reservation(props) {
         setDate(date)
         setTime(time)
     }
-    
+
     function onChangeGroupQuantity(quantity) {
         if (parseInt(quantity) < parseInt(MIN)) quantity = MIN
         if (parseInt(quantity) > parseInt(GROUP_MAX)) quantity = GROUP_MAX
@@ -206,7 +207,7 @@ function Checkout_Reservation(props) {
                                         <Input size='small' onChange={(event, object) => onChangeGroupQuantity(object.value)} type="number" required min={MIN} max={GROUP_MAX} style={{ textAlign: 'center', width: '15%', marginRight: '15%' }}></Input>
                                         Select a Subject:
                                         <div style={{ display: 'inline-block' }}>
-                                            <Filter changeFilter={onChangeFilter} name='subject' types={subjects} value={findSubject()} optionAll={findSubject() =='all'}/>
+                                            <Filter changeFilter={onChangeFilter} name='subject' types={subjects} value={findSubject()} optionAll={findSubject() == 'all'} />
                                         </div>
                                         <Header size='small' style={{ marginTop: '5%' }}>Select a Date and Hour:</Header>
                                         <DateTime setDayTime={setDayTime} />
@@ -214,7 +215,7 @@ function Checkout_Reservation(props) {
                                     : null
                             }
                             <Divider />
-                            <Button id='reservation' size='large' style={{ display: 'inline-block', float: 'right' }} onClick={onSubmit} icon='edit alternate' content='Reserve' />
+                            <Button id='reservation' size='large' disabled={disableButton} style={{ display: 'inline-block', float: 'right' }} onClick={onSubmit} icon='edit alternate' content='Reserve' />
 
                             <div style={{ display: 'block', marginTop: '5%' }}>
                                 <Header size='medium'>Material:</Header>

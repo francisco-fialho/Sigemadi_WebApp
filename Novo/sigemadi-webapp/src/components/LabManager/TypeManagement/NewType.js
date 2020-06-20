@@ -19,6 +19,8 @@ function New_Type(props) {
     const [geralSubjects, setGeralSubjects] = useState([])
     const [checkboxes, setCheckboxes] = useState([])
     const [error, setError] = useState(null)
+    const [disableButton, setDisableButton] = useState(false)
+
 
     useEffect(() => {
         const role = JSON.parse(localStorage.getItem('userinfo')).roles.find(role => role.name === 'lab_responsible')
@@ -53,9 +55,8 @@ function New_Type(props) {
 
     function onConfirm() {
         const checked = Object.keys(checkboxes).filter(checkbox => checkboxes[checkbox])
-        const button = document.getElementById('confirm')
 
-        if (name === '') {
+        if (name === '' || name.trimLeft().length == 0) {
             return toast({
                 type: 'warning',
                 title: 'Missing Information',
@@ -64,7 +65,7 @@ function New_Type(props) {
                 size: 'mini'
             })
         }
-        if (description === '') {
+        if (description === '' || description.trimLeft().length == 0) {
             return toast({
                 type: 'warning',
                 title: 'Missing Information',
@@ -85,8 +86,7 @@ function New_Type(props) {
                     size: 'mini'
                 })
             }
-            button.disabled = true
-
+            setDisableButton(true)
             axios.post(typeSci_AreaUrl.replace(':sciAreaId', sci_area.id),
                 { "name": name, "description": description, "subjects": checked })
                 .then(resp => {
@@ -95,13 +95,12 @@ function New_Type(props) {
                 })
                 .catch(err => {
                     Response_Handler(err.response)
-                    button.disabled = false
+                    setDisableButton(false)
                 })
         }
 
         else {
-            button.disabled = true
-
+            setDisableButton(true)
             axios.post(typeSci_AreaUrl.replace(':sciAreaId', sci_area.id),
                 { "name": name, "description": description, "subjects": geralSubjects })
                 .then(resp => {
@@ -110,7 +109,7 @@ function New_Type(props) {
                 })
                 .catch(err => {
                     Response_Handler(err.response)
-                    button.disabled = false
+                    setDisableButton(false)
                 })
         }
 
@@ -211,7 +210,7 @@ function New_Type(props) {
                             </Card.Content>
                             <Card.Content extra>
                                 <ButtonGroup fluid>
-                                    <Button basic color='green' id='confirm' content='Confirm' onClick={onConfirm}></Button>
+                                    <Button basic color='green' id='confirm' content='Confirm' disabled={disableButton} onClick={onConfirm}></Button>
                                     <Button basic color='red' content='Cancel' onClick={onCancel}></Button>
                                 </ButtonGroup>
                             </Card.Content>

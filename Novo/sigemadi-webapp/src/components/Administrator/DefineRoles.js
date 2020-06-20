@@ -16,6 +16,7 @@ function Define_Roles(props) {
     const [sciAreas, setSciAreas] = useState('all')
     const [checkboxes, setCheckboxes] = useState([])
     const [error, setError] = useState(null)
+    const [disableButton,setDisableButton] = useState(false)
 
     useEffect(() => {
         const id = props.match.params['id']
@@ -120,8 +121,6 @@ function Define_Roles(props) {
 
 
     function onSubmit() {
-        const confirmButton = document.getElementById('confirm')
-
         let checked = Object.keys(checkboxes)
             .filter((checkBox) => checkboxes[checkBox]).map(r => { return { 'role': r } })
 
@@ -141,14 +140,14 @@ function Define_Roles(props) {
                 sci_area: sciArea
             }
         }
-        confirmButton.disabled = true
+        setDisableButton(true)
 
         axios.put(userRolesUrl.replace(':id', person.id), { 'roles': checked })
             .then(resp => {
                 Response_Handler(resp)
                 setTimeout(() => props.history.push(props.location.pathname.replace(`/${person.id}`, '')), 3000)
             }).catch(err => {
-                confirmButton.disabled = false
+                setDisableButton(false)
                 Response_Handler(err.response)
             })
 
@@ -185,7 +184,7 @@ function Define_Roles(props) {
                                     createCheckBoxes()
                                 }
                             </div>
-                            <Button floated='right' id='confirm' color='green' icon='check' onClick={onSubmit} content='Confirm'></Button>
+                            <Button floated='right' id='confirm' color='green' icon='check' disabled={disableButton} onClick={onSubmit} content='Confirm'></Button>
                         </div>
             }
         </div>

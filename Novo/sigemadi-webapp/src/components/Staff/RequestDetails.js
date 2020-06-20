@@ -23,6 +23,8 @@ function Request_Details(props) {
     const [materialsHistory, setMaterialsHistory] = useState([])
     const [user, setUser] = useState(null)
     const [error, setError] = useState(null)
+    const [disableButton, setDisableButton] = useState(false)
+
 
     useEffect(() => {
         const id = props.match.params['id']
@@ -84,10 +86,7 @@ function Request_Details(props) {
 
 
     function endRequest() {
-        const endButton = document.getElementById('endButton')
-        const addButton = document.getElementById('addButton')
-        endButton.disabled = true
-        addButton.disabled = true
+        setDisableButton(true)
 
         axios.patch(requestUrl.replace(':id', request.id), {})
             .then(resp => {
@@ -96,17 +95,13 @@ function Request_Details(props) {
             })
             .catch(err => {
                 Response_Handler(err.response)
-                endButton.disabled = false
-                addButton.disabled = false
+                setDisableButton(false)
             })
         setModalTermination(false)
     }
 
     function removeFromRequest() {
-        const endButton = document.getElementById('endButton')
-        const addButton = document.getElementById('addButton')
-        endButton.disabled = true
-        addButton.disabled = true
+        setDisableButton(true)
 
         materialsRemoved.map((material, idx) => {
             const id = request.materials.find(m => m.name === material.name).id
@@ -117,16 +112,14 @@ function Request_Details(props) {
                         if (idx + 1 === materialsRemoved.length) {
                             setTimeout(() => {
                                 getRequestInfo(request.id)
-                                endButton.disabled = false
-                                addButton.disabled = false
+                                setDisableButton(false)
                             }, 3000)
                             setSelectedMaterials([])
                         }
                     })
                     .catch(err => {
                         Response_Handler(err.response)
-                        endButton.disabled = false
-                        addButton.disabled = false
+                        setDisableButton(false)
                     })
             }, 1000)
 
@@ -362,8 +355,8 @@ function Request_Details(props) {
                             {
                                 request.close_date != undefined ? null : (
                                     <div>
-                                        <Button id='endButton' floated='right' color={selectedMaterials.length > 0 ? '' : 'red'} onClick={onSubmit} content={selectedMaterials.length > 0 ? 'Remove Material' : 'End Request'} icon='check'></Button>
-                                        <Button id='addButton' floated='left' onClick={addMaterial} content='Add Material' icon='add'></Button>
+                                        <Button id='endButton' disabled={disableButton} floated='right' color={selectedMaterials.length > 0 ? '' : 'red'} onClick={onSubmit} content={selectedMaterials.length > 0 ? 'Remove Material' : 'End Request'} icon='check'></Button>
+                                        <Button id='addButton' disabled={disableButton} floated='left' onClick={addMaterial} content='Add Material' icon='add'></Button>
                                     </div>)
                             }
 

@@ -84,7 +84,7 @@ function Damaged_Material_Details(props) {
                     </Card.Content>
                     <Card.Content extra>
                         <ButtonGroup fluid>
-                            <Button basic color='green' id='confirm' onClick={props.onConfirm} content='Confirm' />
+                            <Button basic color='green' id='confirm' disabled={props.buttonState} onClick={props.onConfirm} content='Confirm' />
                             <Button basic color='red' onClick={props.onCancel} content='Cancel' />
                         </ButtonGroup>
                     </Card.Content>
