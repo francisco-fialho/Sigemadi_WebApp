@@ -26,7 +26,7 @@ function Request_Details(props) {
 
     useEffect(() => {
         const id = props.match.params['id']
-        setUser(JSON.parse(sessionStorage.getItem('userinfo')))
+        setUser(JSON.parse(localStorage.getItem('userinfo')))
         getRequestInfo(id)
     }, [])
 

@@ -23,7 +23,7 @@ function Checkout_Reservation(props) {
     const [error, setError] = useState(null)
 
     useEffect(() => {
-        setUser(JSON.parse(sessionStorage.getItem('userinfo')))
+        setUser(JSON.parse(localStorage.getItem('userinfo')))
 
         axios.get(subjectsUrl)
             .then(resp => {
@@ -168,7 +168,7 @@ function Checkout_Reservation(props) {
         return subject.id
     }
 
-    function buildMaterialInfo() {
+    function createMaterialInfo() {
         return (<List size='large' divided>
             {
                 materials.map(material => {
@@ -204,7 +204,7 @@ function Checkout_Reservation(props) {
                                     <div>
                                         Groups Quantity:
                                         <Input size='small' onChange={(event, object) => onChangeGroupQuantity(object.value)} type="number" required min={MIN} max={GROUP_MAX} style={{ textAlign: 'center', width: '15%', marginRight: '15%' }}></Input>
-                                        Subjects:
+                                        Select a Subject:
                                         <div style={{ display: 'inline-block' }}>
                                             <Filter changeFilter={onChangeFilter} name='subject' types={subjects} value={findSubject()} optionAll={findSubject() =='all'}/>
                                         </div>
@@ -214,11 +214,11 @@ function Checkout_Reservation(props) {
                                     : null
                             }
                             <Divider />
-                            <Button id='reservation' basic size='large' style={{ display: 'inline-block', float: 'right' }} onClick={onSubmit} icon='edit alternate' content='Reserve' />
+                            <Button id='reservation' size='large' style={{ display: 'inline-block', float: 'right' }} onClick={onSubmit} icon='edit alternate' content='Reserve' />
 
                             <div style={{ display: 'block', marginTop: '5%' }}>
                                 <Header size='medium'>Material:</Header>
-                                {buildMaterialInfo(this)}
+                                {createMaterialInfo(this)}
                             </div>
                         </div>
             }

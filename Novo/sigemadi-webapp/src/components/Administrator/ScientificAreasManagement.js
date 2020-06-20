@@ -20,7 +20,6 @@ function Scientific_Areas_Management(props) {
     function getSci_Areas() {
         axios.get(sci_areasUrl)
             .then(resp => {
-                setSci_Area('')
                 setSci_Areas(resp.data['sci_areas'].filter(area => area.id != 0))
             }).catch(err => setError(Response_Handler(err.response)))
     }
@@ -42,6 +41,7 @@ function Scientific_Areas_Management(props) {
     function addArea() {
         const data = document.getElementById('addarea')
 
+
         if (data.value != '' && sci_area != '')
             axios.post(sci_areasUrl, { 'name': sci_area })
                 .then(resp => {
@@ -55,7 +55,7 @@ function Scientific_Areas_Management(props) {
     }
 
     function onChangeArea(value) {
-        if (value != '') {
+        if (value != '' && value.trimLeft().length != 0) {
             setSci_Area(value)
         }
     }

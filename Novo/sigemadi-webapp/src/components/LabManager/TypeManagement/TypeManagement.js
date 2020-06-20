@@ -16,7 +16,7 @@ function Type_Management(props) {
     const [error, setError] = useState(null)
 
     useEffect(() => {
-        const role = JSON.parse(sessionStorage.getItem('userinfo')).roles.find(role => role.name === 'lab_responsible')
+        const role = JSON.parse(localStorage.getItem('userinfo')).roles.find(role => role.name === 'lab_responsible')
         setSci_Area(role.sci_area_id)
         searchTypes(role.sci_area_id)
     }, [])

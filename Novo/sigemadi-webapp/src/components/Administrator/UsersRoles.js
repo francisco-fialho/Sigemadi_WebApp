@@ -109,7 +109,7 @@ function Users_Roles(props) {
                     setMoreData(false)
                     setShowLoading(false)
                     return toast({
-                        type: 'error',
+                        type: 'warning',
                         title: 'Something Went Wrong',
                         time: 2000,
                         size: 'mini',
@@ -243,7 +243,7 @@ function Users_Roles(props) {
 
                         <Grid columns={6} id='users' style={style}>
                             {
-                                createUsersTable()
+                                persons.length==0 && !showLoading ? <Message>There are no results</Message> : createUsersTable()
                             }
                             <div ref={scrollObserve}></div>
                             {

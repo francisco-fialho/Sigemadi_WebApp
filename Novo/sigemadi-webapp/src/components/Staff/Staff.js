@@ -17,7 +17,7 @@ function Staff(props) {
     const [modal, setModal] = useState(false)
 
     useEffect(() => {
-        const userInfo = JSON.parse(sessionStorage.getItem('userinfo'))
+        const userInfo = JSON.parse(localStorage.getItem('userinfo'))
         setUser({...userInfo})
     }, [])
 

@@ -113,8 +113,10 @@ function Request(props) {
                 let curr = resp.data['current'] == undefined ? false : true
 
                 if (((requestState === 'all' && !old && !curr) || (requestState === 'true' && !curr) || (requestState === 'false' && !old)) && requestsAdded.length === 0) {
+                    setShowLoading(false)
+                    setMoreData(false)
                     return toast({
-                        type: 'error',
+                        type: 'warning',
                         title: 'Something went wrong',
                         time: 2000,
                         size: 'mini',
@@ -171,12 +173,12 @@ function Request(props) {
         axios.get(requestsUrl + url)
             .then(resp => {
                 const data = resp.data['requests']
-                if (data.length === 0 && requestsAdded.length === 0) {
+                if (data.length == 0 && requestsAdded.length == 0) {
+                    //setRequests(data)
                     setShowLoading(false)
-                    setRequests(data)
                     setMoreData(false)
                     return toast({
-                        type: 'error',
+                        type: 'warning',
                         title: 'Something went wrong',
                         time: 2000,
                         size: 'mini',
@@ -234,6 +236,7 @@ function Request(props) {
         setPage(newPage)
         setMoreData(true)
         setShowLoading(true)
+        setRequests([])
         setReset('visible')
         if (userId != '') {
             setDate('')
@@ -295,7 +298,7 @@ function Request(props) {
                         <div style={{ display: 'inline-block' }}>
                                 <Date date={date} setDay={setDay}></Date>
                             </div>
-                            <Input size='mini' id='searchUser' onChange={(event, object) => setUserId(object.value)} type="text" placeholder="Introduce student number" icon='users' style={{ float: 'right' }} />
+                            <Input size='mini' id='searchUser' onChange={(event, object) => setUserId(object.value)} type="text" placeholder="Introduce user number" icon='users' style={{ float: 'right' }} />
 
                             <div style={{ display: 'block', marginBottom: '1%', float: 'left' }}>
                                 <Filter changeFilter={onChangeType} name="type" title='Type' types={requestTypes} value={requestType.id} optionAll={requestType.id == 'all'} />
@@ -309,7 +312,7 @@ function Request(props) {
                         <div style={{ display: 'block' }}>
                             <Grid columns={4} id='requests' style={style}>
                                 {
-                                    buildRequestList()
+                                    requests.length==0 && !showLoading? <Message>There are no results</Message> : buildRequestList()
                                 }
                                 <div ref={scrollObserve}></div>
                                 {

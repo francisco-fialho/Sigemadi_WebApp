@@ -11,7 +11,7 @@ function Reservation(props) {
     const [error, setError] = useState(null)
 
     useEffect(() => {
-        const id = JSON.parse(sessionStorage.getItem('userinfo')).id
+        const id = JSON.parse(localStorage.getItem('userinfo')).id
         axios.get(reservationsUserUrl.replace(':id', id))
             .then(resp => {
                 setReservations(resp.data['reservations'])

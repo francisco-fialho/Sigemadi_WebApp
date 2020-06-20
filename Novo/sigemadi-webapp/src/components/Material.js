@@ -51,7 +51,7 @@ function Material(props) {
     }, [scrollRadio])
 
     function canReport() {
-        const user = JSON.parse(sessionStorage.getItem('userinfo'))
+        const user = JSON.parse(localStorage.getItem('userinfo'))
         return user.selectedRole === 'staff'
     }
 
@@ -67,8 +67,10 @@ function Material(props) {
                 const data = resp.data['materials']
 
                 if (data.length === 0 && materialAdded.length === 0) {
+                    setShowLoading(false)
+                    setMoreData(false)
                     return toast({
-                        type: 'error',
+                        type: 'warning',
                         title: 'Something went wrong',
                         time: 2000,
                         size: 'mini',
@@ -100,17 +102,17 @@ function Material(props) {
 
 
     function createMaterialList() {
-        return materials.map(m => {
+        return materials.map(material => {
             return (
-                <Grid.Column key={m.name}>
+                <Grid.Column key={material.name}>
                     <Card centered>
-                        <Card.Header>{m.name}</Card.Header>
-                        <Card.Description>{m.id}</Card.Description>
+                        <Card.Header>{material.name}</Card.Header>
+                        <Card.Description>{material.id}</Card.Description>
                         <Card.Content extra>
                             <ButtonGroup fluid>
-                                <Button content='Details' icon='microchip' onClick={() => props.history.push(props.location.pathname + '/' + m.id)}></Button>
+                                <Button content='Details' icon='microchip' onClick={() => props.history.push(props.location.pathname + '/' + material.id)}></Button>
                                 {
-                                    m.can_be_reported && canReport() ? <Button content='Report' icon='bug' color='red' onClick={() => props.history.push(props.location.pathname + `/${m.id}/report`)}></Button> : null
+                                    material.can_be_reported && canReport() ? <Button content='Report' icon='bug' color='red' onClick={() => props.history.push(props.location.pathname + `/${material.id}/report`)}></Button> : null
                                 }
                             </ButtonGroup>
                         </Card.Content>
@@ -142,7 +144,7 @@ function Material(props) {
                         <div>
                             <Grid columns={3} id='material' style={style}>
                                 {
-                                    createMaterialList()
+                                    materials.length==0 && !showLoading ? <Message>There are no results</Message> : createMaterialList()
                                 }
                                 <div ref={scrollObserve}></div>
                                 {

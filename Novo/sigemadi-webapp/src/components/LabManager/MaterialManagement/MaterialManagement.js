@@ -70,9 +70,11 @@ function Material_Management(props) {
         axios.get(materialsUrl + url)
             .then(resp => {
                 const data = resp.data['materials']
-                if (resp.length === 0 && materialAdded.length === 0) {
+                if (data.length == 0 && materialAdded.length == 0) {
+                    setShowLoading(false)
+                    setMoreData(false)
                     return toast({
-                        type: 'error',
+                        type: 'warning',
                         title: 'Something went wrong',
                         time: 2000,
                         size: 'mini',
@@ -132,7 +134,7 @@ function Material_Management(props) {
         setBulkMaterial({ ...material, delete_quantity: 1 })
         setModal(true)
     }
-    
+
     function onSubmit() {
         props.history.push('/auth/labmanager/addmaterial')
     }
@@ -149,9 +151,8 @@ function Material_Management(props) {
             return (
                 <Grid.Column>
                     <Card centered>
-                        <Card.Content>
-                            {material.id}
-                        </Card.Content>
+                    <Card.Header>{material.name}</Card.Header>
+                    <Card.Description>{material.id}</Card.Description>
                         <Card.Content extra floated='right'>
                             <Button.Group fluid>
                                 <Button id={'detail' + material.id} content='Details' icon='microchip' onClick={() => props.history.push(props.location.pathname + '/' + material.id)}></Button>
@@ -199,10 +200,11 @@ function Material_Management(props) {
                                 <Button onClick={() => setModal(false)} content='Cancel' />
                             </Modal.Actions>
                         </Modal>
+
                         <div>
                             <Grid columns={3} id='material' style={style}>
                                 {
-                                    createMaterialList()
+                                    materials.length == 0 && !showLoading ? <Message>There are no results</Message> : createMaterialList()
                                 }
 
                                 <div ref={scrollObserve}></div>
@@ -211,6 +213,7 @@ function Material_Management(props) {
                                 }
                             </Grid>
                         </div>
+
                     </div>
             }
         </div>

@@ -21,7 +21,7 @@ function New_Type(props) {
     const [error, setError] = useState(null)
 
     useEffect(() => {
-        const role = JSON.parse(sessionStorage.getItem('userinfo')).roles.find(role => role.name === 'lab_responsible')
+        const role = JSON.parse(localStorage.getItem('userinfo')).roles.find(role => role.name === 'lab_responsible')
         axios.get(sci_areasUrl)
             .then(resp => {
                 const specific = resp.data['sci_areas'].find(s => s.id === role.sci_area_id)

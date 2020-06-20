@@ -215,7 +215,7 @@ function Checkout_Request(props) {
                                     </Card.Content>
                                 </Card>
                                 <Divider />
-                                <Button id='submit' basic size='large' style={{ display: 'inline-block', float: 'right' }} onClick={onSubmit} icon='edit alternate' content='Request' />
+                                <Button id='submit' size='large' style={{ display: 'inline-block', float: 'right' }} onClick={onSubmit} icon='edit alternate' content='Request' />
 
                                 <div style={{ display: 'block', marginTop: '5%' }}>
                                     <Header size='medium'>Material:</Header>

@@ -87,7 +87,7 @@ function Material_Details(props) {
     }
 
     function canReport() {
-        const user = JSON.parse(sessionStorage.getItem('userinfo'))
+        const user = JSON.parse(localStorage.getItem('userinfo'))
         return user.selectedRole === 'staff'
     }
 

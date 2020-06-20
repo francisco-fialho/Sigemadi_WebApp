@@ -100,9 +100,11 @@ function Material_Request(props) {
             .then(async resp => {
                 const data = resp.data['materials']
 
-                if (resp.length === 0 && materialAdded.length === 0) {
+                if (resp.length == 0 && materialAdded.length == 0) {
+                    setShowLoading(false)
+                    setMoreData(false)
                     return toast({
-                        type: 'error',
+                        type: 'warning',
                         title: 'Something went wrong',
                         time: 2000,
                         size: 'mini',
@@ -314,7 +316,7 @@ function Material_Request(props) {
                         <div>
                             <Grid columns={3} id='material' style={style} >
                                 {
-                                    createCheckBoxes()
+                                    materials.length==0 && !showLoading ? <Message>There are no results</Message> : createCheckBoxes()
                                 }
                                 <div ref={scrollObserve}></div>
                                 {

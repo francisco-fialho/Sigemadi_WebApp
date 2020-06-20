@@ -27,7 +27,6 @@ function Subjects_Management(props) {
         axios.get(sci_areaUrl.replace(':id', sci_area.id))
             .then(resp => {
                 setSubjects(resp.data['subjects'] || [])
-                setSubject('')
             }).catch(err => setError(Response_Handler(err.response)))
     }
 
@@ -61,7 +60,7 @@ function Subjects_Management(props) {
     }
 
     function onChangeSubject(value) {
-        if (value != '') {
+        if (value != '' && value.trimLeft().length != 0) {
             setSubject(value)
         }
     }

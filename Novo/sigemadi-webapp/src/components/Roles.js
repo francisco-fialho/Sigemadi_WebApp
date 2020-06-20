@@ -30,7 +30,7 @@ function Roles(props) {
     ]
 
     useEffect(() => {
-        const userInfo = JSON.parse(sessionStorage.getItem('userinfo'))
+        const userInfo = JSON.parse(localStorage.getItem('userinfo'))
         let availableRoles = []
         userInfo.roles.map(role => role.name != 'student' ? (availableRoles.push(roles.find(r => r.name === role.name).value)) : null)
         if (availableRoles.length == 0) {
@@ -47,10 +47,10 @@ function Roles(props) {
     }, [])
 
     function selectRole(name) {
-        const user = JSON.parse(sessionStorage.getItem('userinfo'))
+        const user = JSON.parse(localStorage.getItem('userinfo'))
         user.selectedRole = name
-        sessionStorage.removeItem('userinfo')
-        sessionStorage.setItem('userinfo', JSON.stringify(user))
+        localStorage.removeItem('userinfo')
+        localStorage.setItem('userinfo', JSON.stringify(user))
     }
 
     return (

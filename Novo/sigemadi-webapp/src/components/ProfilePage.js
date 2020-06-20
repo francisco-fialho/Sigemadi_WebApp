@@ -8,7 +8,7 @@ function Profile_Page(props) {
     })
 
     useEffect(() => {
-        const userInfo = JSON.parse(sessionStorage.getItem('userinfo'))
+        const userInfo = JSON.parse(localStorage.getItem('userinfo'))
 
         setUser(userInfo)
     }, [])

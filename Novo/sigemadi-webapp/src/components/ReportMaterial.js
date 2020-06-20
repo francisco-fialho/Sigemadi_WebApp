@@ -16,7 +16,7 @@ function Report_Material(props) {
     useEffect(() => {
         const confirmButton = document.getElementById('confirm')
 
-        const userId = JSON.parse(sessionStorage.getItem('userinfo')).id
+        const userId = JSON.parse(localStorage.getItem('userinfo')).id
         setUser(userId)
         const materialId = props.match.params['id']
         if (materialId.slice(0, 2) == '00') {
@@ -30,7 +30,7 @@ function Report_Material(props) {
             .then(async resp => {
                 if (resp.data['state'] === 'available')
                     setMaterial(materialId)
-                else{
+                else {
                     props.history.push(props.location.pathname.replace('/report', '/material'))
                 }
             })
@@ -40,68 +40,68 @@ function Report_Material(props) {
 
     }, [])
 
-function onConfirm() {
-    const confirmButton = document.getElementById('confirm')
+    function onConfirm() {
+        const confirmButton = document.getElementById('confirm')
 
-    if (description == '') {
-        return toast({
-            type: 'warning',
-            title: 'Missing Information',
-            description: 'Insert a damage description',
-            time: 2000,
-            size: 'mini'
-        })
+        if (description == '' || description.trimLeft().length == 0) {
+            return toast({
+                type: 'warning',
+                title: 'Missing Information',
+                description: 'Insert a damage description',
+                time: 2000,
+                size: 'mini'
+            })
+        }
+
+        confirmButton.disabled = true
+
+        axios.post(reportMaterialUrl.replace(':id', material), { "description": description, "user": user })
+            .then(resp => {
+                Response_Handler(resp)
+                setTimeout(() => {
+                    props.history.push(props.location.pathname.replace('/report', ''))
+                }, 3000)
+            })
+            .catch(err => {
+                confirmButton.disabled = false
+                Response_Handler(err.response)
+            })
+
     }
 
-    confirmButton.disabled = true
 
-    axios.post(reportMaterialUrl.replace(':id', material), { "description": description, "user": user })
-        .then(resp => {
-            Response_Handler(resp)
-            setTimeout(() => {
-                props.history.push(props.location.pathname.replace('/report',''))
-            }, 3000)
-        })
-        .catch(err => {
-            confirmButton.disabled = false
-            Response_Handler(err.response)
-        })
+    function onCancel() {
+        props.history.push(props.location.pathname.replace('/report', ''))
+    }
 
-}
-
-
-function onCancel() {
-    props.history.push(props.location.pathname.replace('/report',''))
-}
-
-return (
-    <div>
-        <SemanticToastContainer />
-        <Header size='medium'>Report Damage: </Header>
-        <Divider />
-        <Card fluid>
-            <Card.Content>
-                <Card.Header>{material}</Card.Header>
-                <Card.Description>
-                    <Header attached='top' color='red'>
-                        Report Description
+    return (
+        <div>
+            <SemanticToastContainer />
+            <Header size='medium'>Report Damage: </Header>
+            <Divider />
+            <Card fluid>
+                <Card.Content>
+                    <Card.Header>{material}</Card.Header>
+                    <Card.Description>
+                        <Header attached='top' color='red'>
+                            Report Description
                             </Header>
-                    <Segment>
-                        <Form>
-                            <TextArea required onChange={(event, object) => setDescription(object.value)} rows='2' maxLength='200'></TextArea>
-                        </Form>
-                    </Segment>
-                </Card.Description>
-            </Card.Content>
-            <ButtonGroup fluid>
-                <Button basic id='confirm' color='green' onClick={onConfirm} content='Confirm' />
-                <Button basic color='red' onClick={onCancel} content='Cancel' />
-            </ButtonGroup>
-            <Card.Content extra>
-            </Card.Content>
-        </Card>
-    </div >
-)
+                        <Segment>
+                            <Form>
+                                <TextArea required onChange={(event, object) => setDescription(object.value)} rows='2' maxLength='200'></TextArea>
+                            </Form>
+                        </Segment>
+                    </Card.Description>
+                </Card.Content>
+                <ButtonGroup fluid>
+                    <Button basic id='confirm' color='green' onClick={onConfirm} content='Confirm' />
+                    <Button basic color='red' onClick={onCancel} content='Cancel' />
+                </ButtonGroup>
+                <Card.Content extra>
+                </Card.Content>
+            </Card>
+        </div >
+    )
 }
 
 
