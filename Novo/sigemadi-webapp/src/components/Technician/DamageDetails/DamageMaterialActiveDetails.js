@@ -14,14 +14,15 @@ function Damage_Material_Active_Details(props) {
     })
     const [error, setError] = useState(null)
     const [disableButton,setDisableButton] = useState(false)
+    const httpsAxios = axios.create({ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
 
 
     useEffect(() => {
         const id = props.match.params['id']
-        axios.get(damageUrl.replace(':id', id))
+        httpsAxios.get(damageUrl.replace(':id', id))
             .then(resp => {
                 if(resp.data.state!='to_solve') return setError(<Page404 />)
-                axios.get(damagesStatesUrl)
+                httpsAxios.get(damagesStatesUrl)
                     .then(r => {
                         setMaterial_Report({
                             ...resp.data,
@@ -55,7 +56,7 @@ function Damage_Material_Active_Details(props) {
             })
         }
         setDisableButton(true)
-        axios.patch(damageUrl.replace(':id', material_report.id), { "state": material_report.state, "report": material_report.report })
+        httpsAxios.patch(damageUrl.replace(':id', material_report.id), { "state": material_report.state, "report": material_report.report })
             .then(resp => {
                 Response_Handler(resp)
                 setTimeout(() => props.history.push('/auth/tech/damages'), 3000)

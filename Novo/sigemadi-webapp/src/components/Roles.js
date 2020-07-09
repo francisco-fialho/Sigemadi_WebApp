@@ -32,17 +32,17 @@ function Roles(props) {
     useEffect(() => {
         const userInfo = JSON.parse(localStorage.getItem('userinfo'))
         let availableRoles = []
-        userInfo.roles.map(role => role.name != 'student' ? (availableRoles.push(roles.find(r => r.name === role.name).value)) : null)
-        if (availableRoles.length == 0) {
-            toast({
-                type: 'error',
-                title: 'Something Went Wrong',
-                time: 2000,
-                size: 'mini',
-                description: 'Student users can´t login!'
-            })
-            setTimeout(() => props.history.push(''), 3000)
-        }
+        userInfo.roles.map(role => role.name != 'student' ? (availableRoles.push(roles.find(r => r.name === role).value)) : null)
+        // if (availableRoles.length == 0) {
+        //     toast({
+        //         type: 'error',
+        //         title: 'Something Went Wrong',
+        //         time: 2000,
+        //         size: 'mini',
+        //         description: 'Student users can´t login!'
+        //     })
+        //     setTimeout(() => props.history.push(''), 3000)
+        // }
         setUserRoles(availableRoles)
     }, [])
 

@@ -33,10 +33,12 @@ function Material_Details(props) {
         subjects: []
     })
     const [error, setError] = useState(null)
+    const httpsAxios = axios.create({ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
+
 
     useEffect(() => {
         const id = props.match.params['id']
-        axios.get(materialUrl.replace(':id', id))
+        httpsAxios.get(materialUrl.replace(':id', id))
             .then(resp => {
                 setMaterial({
                     ...resp.data,
@@ -70,7 +72,7 @@ function Material_Details(props) {
         return titles.map(t => {
             let value = material[t.value]
             if (t.value === 'subjects'){
-                if (material.id.slice(0,2)=='00') value = 'All Subjects'
+                if (material.id.split('-')[0]==0) value = 'All Subjects'
                 else value = createMaterialInfo(value)
             } 
             return (

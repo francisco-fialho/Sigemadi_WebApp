@@ -22,6 +22,7 @@ function Users_Roles(props) {
     const [moreData, setMoreData] = useState(true)
     const [error, setError] = useState(null)
     const [editing, setEditing] = useState(false)
+    const httpsAxios = axios.create({ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
 
 
 
@@ -46,7 +47,7 @@ function Users_Roles(props) {
             } while (!next.done)
             setReset('visible')
         }
-        axios.get(rolesUrl)
+        httpsAxios.get(rolesUrl)
             .then(resp => {
                 setRoles(resp.data['roles'].filter(r => r !== 'student' && r !== 'staff'))
             }).catch(err => Response_Handler(err.response))
@@ -100,7 +101,7 @@ function Users_Roles(props) {
         if (requestUrl == '') requestUrl += '?role=administrator,teacher,lab_responsible,technician'
         requestUrl += `&page=${page}`
 
-        axios.get(usersUrl + requestUrl)
+        httpsAxios.get(usersUrl + requestUrl)
             .then(resp => {
                 const data = resp.data['users']
 

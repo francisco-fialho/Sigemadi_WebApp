@@ -18,12 +18,13 @@ function Checkout_Request(props) {
     const [photo, setPhoto] = useState(ProfilePicMatthew)
     const [error, setError] = useState(null)
     const [disableButton,setDisableButton] = useState(false)
+    const httpsAxios = axios.create({ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
 
     useEffect(() => {
         const requestId = props.match.params.id
 
         if (requestId != undefined) {
-            axios.get(requestUrl.replace(":id", requestId))
+            httpsAxios.get(requestUrl.replace(":id", requestId))
                 .then(resp => {
                     setRequestId(requestId)
                     setId(resp.data["user_id"])
@@ -52,10 +53,10 @@ function Checkout_Request(props) {
     function searchProfile() {
         const id = document.getElementById("searchprofile").value
 
-        axios.get(userUrl.replace(':id', id))
+        httpsAxios.get(userUrl.replace(':id', id))
             .then(resp => {
 
-                axios.get(userRolesUrl.replace(':id', id))
+                httpsAxios.get(userRolesUrl.replace(':id', id))
                     .then(resp_roles => {
                         if (resp_roles.data['roles'].find(r => r.name === 'student') === undefined) {
                             return toast({
@@ -81,7 +82,7 @@ function Checkout_Request(props) {
         return (<List size='large' divided style={{ marginBottom: '5%' }}>
             {
                 material.map(material => {
-                    if (material.id.slice(0,2)=='00') {
+                    if (material.id.split('-')[0]==0) {
                         return <List.Item key={material.id}>
                             <List.Content floated='left'>
                                 <List.Header >{material.name}</List.Header>
@@ -111,7 +112,7 @@ function Checkout_Request(props) {
         let verifyQuantity = false
 
         let materials_requested = material.reduce((materials, material) => {
-            if (material.id.slice(0,2)!='00') {
+            if (material.id.split('-')[0]==0) {
                 materials.push({ 'material_id': material.id, 'quantity': '1' })
             }
             else {
@@ -150,7 +151,7 @@ function Checkout_Request(props) {
             setDisableButton(true)
 
             if (requestId === null) {
-                axios.post(requestsUrl, { 'materials_requested': material, 'user_id': id })
+                httpsAxios.post(requestsUrl, { 'materials_requested': material, 'user_id': id })
                     .then(resp => {
                         Response_Handler(resp)
                         setTimeout(() => {
@@ -163,7 +164,7 @@ function Checkout_Request(props) {
                     })
             }
             else {
-                axios.put(requestUpdateUrl.replace(':id', requestId), { "materials": material })
+                httpsAxios.put(requestUpdateUrl.replace(':id', requestId), { "materials": material })
                     .then(resp => {
                         Response_Handler(resp)
                         setTimeout(() => {

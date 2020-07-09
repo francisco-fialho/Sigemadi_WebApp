@@ -20,16 +20,17 @@ function New_Type(props) {
     const [checkboxes, setCheckboxes] = useState([])
     const [error, setError] = useState(null)
     const [disableButton, setDisableButton] = useState(false)
+    const httpsAxios = axios.create({ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
 
 
     useEffect(() => {
         const role = JSON.parse(localStorage.getItem('userinfo')).roles.find(role => role.name === 'lab_responsible')
-        axios.get(sci_areasUrl)
+        httpsAxios.get(sci_areasUrl)
             .then(resp => {
                 const specific = resp.data['sci_areas'].find(s => s.id === role.sci_area_id)
                 const geral = resp.data['sci_areas'].find(s => s.id === 0)
 
-                axios.get(sci_areaUrl.replace(':id', role.sci_area_id))
+                httpsAxios.get(sci_areaUrl.replace(':id', role.sci_area_id))
                     .then(r => {
                         setSci_Areas([specific, geral])
                         setSubjects(r.data['subjects'])
@@ -46,7 +47,7 @@ function New_Type(props) {
             }).catch(err => setError(Response_Handler(err.response)))
 
 
-        axios.get(subjectsUrl)
+        httpsAxios.get(subjectsUrl)
             .then(resp => {
                 setGeralSubjects(resp.data['subjects'].map(s => s.id))
             }).catch(err => setError(Response_Handler(err.response)))
@@ -87,7 +88,7 @@ function New_Type(props) {
                 })
             }
             setDisableButton(true)
-            axios.post(typeSci_AreaUrl.replace(':sciAreaId', sci_area.id),
+            httpsAxios.post(typeSci_AreaUrl.replace(':sciAreaId', sci_area.id),
                 { "name": name, "description": description, "subjects": checked })
                 .then(resp => {
                     Response_Handler(resp)
@@ -101,7 +102,7 @@ function New_Type(props) {
 
         else {
             setDisableButton(true)
-            axios.post(typeSci_AreaUrl.replace(':sciAreaId', sci_area.id),
+            httpsAxios.post(typeSci_AreaUrl.replace(':sciAreaId', sci_area.id),
                 { "name": name, "description": description, "subjects": geralSubjects })
                 .then(resp => {
                     Response_Handler(resp)

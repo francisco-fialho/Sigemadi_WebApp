@@ -1,4 +1,6 @@
-const BASE_URL = 'http://10.62.73.30:8085/sigemadi/api'
+const BASE_URL = 'https://10.62.73.49:8443/sigemadi/api'
+
+const loginUrl = `${BASE_URL}/login`
 
 const sci_areasUrl = `${BASE_URL}/scientificareas`
 const sci_areaUrl = `${BASE_URL}/scientificareas/:id`
@@ -33,7 +35,6 @@ const reservationsUrl = `${BASE_URL}/reservations`
 const reservationUrl = `${BASE_URL}/reservations/:id`
 
 const reportMaterialUrl = `${BASE_URL}/materials/:id/damages`
-//const reportMaterialRequestUrl = `${BASE_URL}/requests/:id/materials/:mId/damages`
 const reportSubmissionUrl = `${BASE_URL}/requests/:reqId/materials/:id`
 
 
@@ -50,6 +51,7 @@ const requestsPerTypeByYearStatistic = `${BASE_URL}/statistics/requestspertypeby
 
 
 export {
+    loginUrl,
     sci_areasUrl,
     sci_areaUrl,
     subjectsUrl,

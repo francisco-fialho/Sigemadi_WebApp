@@ -12,6 +12,7 @@ function Report_Material(props) {
     const [material, setMaterial] = useState(null)
     const [user, setUser] = useState(null)
     const [disableButton,setDisableButton] = useState(false)
+    const httpsAxios = axios.create({ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
 
 
     useEffect(() => {
@@ -26,7 +27,7 @@ function Report_Material(props) {
         }
 
 
-        axios.get(materialUrl.replace(':id', materialId))
+        httpsAxios.get(materialUrl.replace(':id', materialId))
             .then(async resp => {
                 if (resp.data['state'] === 'available')
                     setMaterial(materialId)
@@ -53,7 +54,7 @@ function Report_Material(props) {
 
         setDisableButton(true)
 
-        axios.post(reportMaterialUrl.replace(':id', material), { "description": description, "user": user })
+        httpsAxios.post(reportMaterialUrl.replace(':id', material), { "description": description, "user": user })
             .then(resp => {
                 Response_Handler(resp)
                 setTimeout(() => {

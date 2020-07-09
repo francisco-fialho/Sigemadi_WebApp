@@ -14,6 +14,7 @@ function Type_Management(props) {
     const [types, setTypes] = useState([])
     const [sci_area, setSci_Area] = useState('')
     const [error, setError] = useState(null)
+    const httpsAxios = axios.create({ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
 
     useEffect(() => {
         const role = JSON.parse(localStorage.getItem('userinfo')).roles.find(role => role.name === 'lab_responsible')
@@ -22,9 +23,9 @@ function Type_Management(props) {
     }, [])
 
     function searchTypes(sci_area_id) {
-        axios.get(sci_areaUrl.replace(':id', sci_area_id))
+        httpsAxios.get(sci_areaUrl.replace(':id', sci_area_id))
             .then(response => {
-                axios.get(sci_areaUrl.replace(':id', '0'))
+                httpsAxios.get(sci_areaUrl.replace(':id', '0'))
                     .then(resp => {
                         setTypes([...response.data['types'], ...resp.data['types']])
                     }).catch(err => setError(Response_Handler(err.response)))
@@ -38,9 +39,9 @@ function Type_Management(props) {
 
         let area = sci_area
 
-        if (id.slice(0, 2) == '00') area = '0'
+        if (id.split('-')[0]==0) area = '0'
 
-        axios.delete(typeSci_Area_By_IdUrl.replace(':sciAreaId', area).replace(':id', id))
+        httpsAxios.delete(typeSci_Area_By_IdUrl.replace(':sciAreaId', area).replace(':id', id))
             .then(resp => {
                 Response_Handler(resp)
                 setTimeout(() => searchTypes(sci_area), 3000)

@@ -52,6 +52,8 @@ function Statistics() {
     const [requestedTypeByYear, setRequestedTypeByYear] = useState('all')
     const [yearFrom, setYearFrom] = useState('')
     const [yearTo, setYearTo] = useState('')
+    const httpsAxios = axios.create({ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
+
 
 
     useEffect(() => {
@@ -69,14 +71,14 @@ function Statistics() {
     }, [])
 
     function getTypes() {
-        axios.get(typesUrl)
+        httpsAxios.get(typesUrl)
             .then(resp => {
                 setTypes(resp.data.types)
             }).catch(err => ResponseHandler(err.response))
     }
 
     function getTopTenMostUsedMaterialTypes() {
-        axios.get(topTenMostUsedMaterialTypesStatistic)
+        httpsAxios.get(topTenMostUsedMaterialTypesStatistic)
             .then(resp => {
                 setTopTenUsedMaterialTypes(resp.data.data)
             })
@@ -84,7 +86,7 @@ function Statistics() {
     }
 
     function getTopTenMostUsedMaterial() {
-        axios.get(topTenMostUsedMaterialStatistic)
+        httpsAxios.get(topTenMostUsedMaterialStatistic)
             .then(resp => {
                 setTopTenUsedMaterial(resp.data.data)
             })
@@ -92,7 +94,7 @@ function Statistics() {
     }
 
     function getDamagePerType() {
-        axios.get(damagePerTypeStatistic)
+        httpsAxios.get(damagePerTypeStatistic)
             .then(resp => {
                 setdamagePerType(resp.data.data)
             })
@@ -102,7 +104,7 @@ function Statistics() {
     function getDamagedMaterial() {
         let queryString = ''
         if (damageType != 'all') queryString += `?type=${damageType}`
-        axios.get(damagedMaterialStatistic + queryString)
+        httpsAxios.get(damagedMaterialStatistic + queryString)
             .then(resp => {
                 setdamagedMaterial(resp.data.data)
             })
@@ -110,7 +112,7 @@ function Statistics() {
     }
 
     function getAverageTimeToRepair() {
-        axios.get(averageTimeToRepairStatistic)
+        httpsAxios.get(averageTimeToRepairStatistic)
             .then(resp => {
                 setAverageTimeToRepair(resp.data.average)
             })
@@ -118,7 +120,7 @@ function Statistics() {
     }
 
     function getnumberOfRequestedHoursPerType() {
-        axios.get(numberOfRequestedHoursPerTypeStatistic)
+        httpsAxios.get(numberOfRequestedHoursPerTypeStatistic)
             .then(resp => {
                 setNumberOfRequestedHoursPerType(resp.data.data)
             })
@@ -128,7 +130,7 @@ function Statistics() {
     function getnumberOfRequestedHoursPerMaterial() {
         let queryString = ''
         if (requestedType != 'all') queryString += `?type=${requestedType}`
-        axios.get(numberOfRequestedHoursPerMaterialStatistic + queryString)
+        httpsAxios.get(numberOfRequestedHoursPerMaterialStatistic + queryString)
             .then(resp => {
                 setNumberOfRequestedHoursPerMaterial(resp.data.data)
             })
@@ -148,7 +150,7 @@ function Statistics() {
             else queryString += '?'
             queryString += `to=${dayTo}`
         }
-        axios.get(requestsPerTypeByDayStatistic + queryString)
+        httpsAxios.get(requestsPerTypeByDayStatistic + queryString)
             .then(resp => {
                 setRequestsPerTypeByDay(resp.data.data)
             })
@@ -168,7 +170,7 @@ function Statistics() {
             else queryString += '?'
             queryString += `to=${monthTo}`
         }
-        axios.get(requestsPerTypeByMonthStatistic + queryString)
+        httpsAxios.get(requestsPerTypeByMonthStatistic + queryString)
             .then(resp => {
                 setRequestsPerTypeByMonth(resp.data.data)
             })
@@ -188,7 +190,7 @@ function Statistics() {
             else queryString += '?'
             queryString += `to=${yearTo}`
         }
-        axios.get(requestsPerTypeByYearStatistic + queryString)
+        httpsAxios.get(requestsPerTypeByYearStatistic + queryString)
             .then(resp => {
                 setRequestsPerTypeByYear(resp.data.data)
             })

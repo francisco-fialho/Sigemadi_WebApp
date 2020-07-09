@@ -16,6 +16,8 @@ function Damaged_Material_History(props) {
 
     const [material, setMaterial] = useState([])
     const [error, setError] = useState(null)
+    const httpsAxios = axios.create({ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
+
 
     useEffect(() => {
         intersectionObserver.observe(scrollObserve.current)
@@ -46,7 +48,7 @@ function Damaged_Material_History(props) {
     }, scrollOptions)
 
     function getHistoryDamages(pageNumber, damageHistoryReports) {
-        axios.get(damagesUrl.replace(':flag', 'true') + `&page=${pageNumber}`)
+        httpsAxios.get(damagesUrl.replace(':flag', 'true') + `&page=${pageNumber}`)
             .then(resp => {
                 const data = resp.data['damages']
                 if (data.length === 0) setMoreData(false)

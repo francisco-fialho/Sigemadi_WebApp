@@ -4,6 +4,7 @@ import 'react-semantic-toasts/styles/react-semantic-alert.css';
 import Page404 from './Errors/Page404';
 import Page500 from './Errors/Page500';
 import Page400 from './Errors/Page400';
+import { Redirect } from 'react-router-dom';
 
 const Handler = (response) => {
 
@@ -40,6 +41,11 @@ const Handler = (response) => {
         })
         if (response.status == 400) {
             return <Page400 />
+        }
+       
+       //VERIFICAR SE FOR 401 QUER DIZER QUE O TEMPO DO JWT CHEGOU AO FIM 
+        if (response.status == 401) {
+            return <Redirect to='/login' />
         }
         if (response.status == 404) {
             return <Page404 />

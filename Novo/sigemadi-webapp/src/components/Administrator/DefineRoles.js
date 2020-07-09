@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react'
 import CheckBox from '../CheckBox/CheckBox'
 import Option from '../Utils/Option'
 import { Card, Image, Button, Icon, Message } from 'semantic-ui-react'
-import axios from 'axios'
 import { rolesUrl, userRolesUrl, userUrl, sci_areasUrl } from '../Utils/Links'
 import Response_Handler from '../ResponseHandler'
 import { SemanticToastContainer, toast } from 'react-semantic-toasts';
+import axios from 'axios'
 
 
 function Define_Roles(props) {
@@ -16,14 +16,15 @@ function Define_Roles(props) {
     const [sciAreas, setSciAreas] = useState('all')
     const [checkboxes, setCheckboxes] = useState([])
     const [error, setError] = useState(null)
-    const [disableButton,setDisableButton] = useState(false)
+    const [disableButton, setDisableButton] = useState(false)
+    const httpsAxios = axios.create({ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
 
     useEffect(() => {
         const id = props.match.params['id']
 
-        axios.get(sci_areasUrl)
+        httpsAxios.get(sci_areasUrl)
             .then(resp_sciareas => {
-                axios.get(userRolesUrl.replace(':id', id))
+                httpsAxios.get(userRolesUrl.replace(':id', id))
                     .then(r => {
 
                         if (r.data['roles'].find(r => r.name == 'student' || r.name == 'staff') != undefined) {
@@ -43,10 +44,10 @@ function Define_Roles(props) {
                             allSciAreas.shift()
                             setSciAreas(allSciAreas)
 
-                            axios.get(rolesUrl)
+                            httpsAxios.get(rolesUrl)
                                 .then(resp_roles => {
 
-                                    axios.get(userUrl.replace(':id', id))
+                                    httpsAxios.get(userUrl.replace(':id', id))
                                         .then(resp => {
 
                                             setPerson(resp.data)
@@ -91,31 +92,10 @@ function Define_Roles(props) {
             }
         })
     }
-    
+
     function onChangeArea(value) {
         if (value != 'all')
             setSciArea(value)
-    }
-
-    function createCheckBoxes() {
-        return roles.map(r => {
-            return (<div key={r.name} >
-                <CheckBox
-                    name={r.name}
-                    label={r.name}
-                    isSelected={checkboxes[r.name]}
-                    onCheckboxChange={onChange}
-                    key={r.name}
-                />
-                {
-                    r.name === 'lab_responsible' ?
-                        <div >
-                            <Option values={sciAreas.map(a => a.name)} value={sciArea} changeOption={onChangeArea} defaultValue={sciArea == 'all' ? "Scientific Area" : null}></Option>
-                        </div> :
-                        null
-                }
-            </div>)
-        })
     }
 
 
@@ -142,7 +122,7 @@ function Define_Roles(props) {
         }
         setDisableButton(true)
 
-        axios.put(userRolesUrl.replace(':id', person.id), { 'roles': checked })
+        httpsAxios.put(userRolesUrl.replace(':id', person.id), { 'roles': checked })
             .then(resp => {
                 Response_Handler(resp)
                 setTimeout(() => props.history.push(props.location.pathname.replace(`/${person.id}`, '')), 3000)
@@ -163,6 +143,28 @@ function Define_Roles(props) {
     function onChange(event) {
         const { name } = event.target
         selectCheckBox(name)
+    }
+
+
+    function createCheckBoxes() {
+        return roles.map(r => {
+            return (<div key={r.name} >
+                <CheckBox
+                    name={r.name}
+                    label={r.name}
+                    isSelected={checkboxes[r.name]}
+                    onCheckboxChange={onChange}
+                    key={r.name}
+                />
+                {
+                    r.name === 'lab_responsible' ?
+                        <div >
+                            <Option values={sciAreas.map(a => a.name)} value={sciArea} changeOption={onChangeArea} defaultValue={sciArea == 'all' ? "Scientific Area" : null}></Option>
+                        </div> :
+                        null
+                }
+            </div>)
+        })
     }
 
     return (

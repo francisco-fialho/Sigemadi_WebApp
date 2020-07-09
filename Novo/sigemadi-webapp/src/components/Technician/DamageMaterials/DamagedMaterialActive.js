@@ -15,6 +15,8 @@ function Damaged_Material_Active(props) {
     const [page, setPage] = useState(0)
     const [moreData, setMoreData] = useState(true)
     const [error, setError] = useState(null)
+    const httpsAxios = axios.create({ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
+
 
 
     const [material, setMaterial] = useState([])
@@ -48,7 +50,7 @@ function Damaged_Material_Active(props) {
     },scrollOptions)
 
     function getDamages(pageNumber, damageReports) {
-        axios.get(damagesUrl.replace(':flag', 'false') + `&page=${pageNumber}`)
+        httpsAxios.get(damagesUrl.replace(':flag', 'false') + `&page=${pageNumber}`)
             .then(resp => {
                 const data = resp.data['damages']
                 if (data.length === 0) setMoreData(false)

@@ -24,6 +24,7 @@ function Request(props) {
     const [page, setPage] = useState(0)
     const [moreData, setMoreData] = useState(true)
     const [error, setError] = useState(null)
+    const httpsAxios = axios.create({ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
 
     useEffect(() => {
         if (props.location && props.location.search) {
@@ -106,7 +107,7 @@ function Request(props) {
             search: searchUrl
         })
 
-        axios.get(requestByUserUrl.replace(":id", id) + `?page=${pageNumber}`)
+        httpsAxios.get(requestByUserUrl.replace(":id", id) + `?page=${pageNumber}`)
             .then(resp => {
 
                 let old = resp.data['older'] == undefined ? false : resp.data['older'].length > 0
@@ -170,7 +171,7 @@ function Request(props) {
             search: searchUrl
         })
 
-        axios.get(requestsUrl + url)
+        httpsAxios.get(requestsUrl + url)
             .then(resp => {
                 const data = resp.data['requests']
                 if (data.length == 0 && requestsAdded.length == 0) {

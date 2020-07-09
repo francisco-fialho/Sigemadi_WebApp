@@ -16,6 +16,7 @@ function Material(props) {
     const [page, setPage] = useState(0)
     const [moreData, setMoreData] = useState(true)
     const [error, setError] = useState(null)
+    const httpsAxios = axios.create({ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
 
 
 
@@ -62,7 +63,7 @@ function Material(props) {
         url += `page=${pageNumber}`
 
 
-        axios.get(materialsUrl + url)
+        httpsAxios.get(materialsUrl + url)
             .then(resp => {
                 const data = resp.data['materials']
 

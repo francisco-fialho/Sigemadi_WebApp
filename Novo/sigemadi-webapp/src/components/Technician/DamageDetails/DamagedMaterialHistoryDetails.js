@@ -13,11 +13,12 @@ function History_Material_Details(props) {
 
     const [material_report, setMaterialReport] = useState({})
     const [error, setError] = useState(null)
+    const httpsAxios = axios.create({ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
 
 
     useEffect(() => {
         const id = props.match.params['id']
-        axios.get(damageUrl.replace(':id', id))
+        httpsAxios.get(damageUrl.replace(':id', id))
             .then(resp => {
                 if(resp.data.state=='to_solve') return setError(<Page404/>)
                 setMaterialReport({ ...resp.data })

@@ -12,7 +12,8 @@ function Scientific_Areas_Management(props) {
     const [sci_areas, setSci_Areas] = useState([])
     const [sci_area, setSci_Area] = useState('')
     const [error, setError] = useState(null)
-
+    const httpsAxios = axios.create({ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
+    
     
     useEffect(() => {
         getSci_Areas()
@@ -20,7 +21,7 @@ function Scientific_Areas_Management(props) {
 
 
     function getSci_Areas() {
-        axios.get(sci_areasUrl)
+        httpsAxios.get(sci_areasUrl)
             .then(resp => {
                 setSci_Areas(resp.data['sci_areas'].filter(area => area.id != 0))
             }).catch(err => setError(Response_Handler(err.response)))
@@ -29,7 +30,7 @@ function Scientific_Areas_Management(props) {
     function deleteArea(id) {
         const deleteButton = document.getElementById(`delete${id}`)
         deleteButton.disabled = true
-        axios.delete(sci_areaUrl.replace(':id', id))
+        httpsAxios.delete(sci_areaUrl.replace(':id', id))
             .then(resp => {
                 Response_Handler(resp)
                 setTimeout(() => getSci_Areas(), 200)
@@ -45,7 +46,7 @@ function Scientific_Areas_Management(props) {
 
 
         if (data.value != '' && sci_area != '')
-            axios.post(sci_areasUrl, { 'name': sci_area })
+            httpsAxios.post(sci_areasUrl, { 'name': sci_area })
                 .then(resp => {
                     Response_Handler(resp)
                     data.value = ''

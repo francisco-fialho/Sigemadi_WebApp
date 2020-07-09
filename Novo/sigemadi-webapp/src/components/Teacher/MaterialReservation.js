@@ -17,6 +17,7 @@ function Material_Reservation(props) {
     const [selectedTypes, setSelectedTypes] = useState([])
     const [error, setError] = useState(null)
     const [reset, setReset] = useState('collapse')
+    const httpsAxios = axios.create({ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
 
     const style = {
         display: 'inline-block',
@@ -56,7 +57,7 @@ function Material_Reservation(props) {
     }
 
     function searchSciArea(lastFilter, filter_subject) {
-        axios.get(sci_areaUrl.replace(':id', lastFilter.id))
+        httpsAxios.get(sci_areaUrl.replace(':id', lastFilter.id))
             .then(resp => {
                 let subj = intersect(resp.data['subjects'], subjects)
                 let types = intersect(resp.data['types'], materialTypes)
@@ -73,14 +74,14 @@ function Material_Reservation(props) {
     }
 
     function searchSubjects(lastFilter, filter_area) {
-        axios.get(subjectUrl.replace(':id', lastFilter.id))
+        httpsAxios.get(subjectUrl.replace(':id', lastFilter.id))
             .then(resp_subject => {
 
                 let sci_id = resp_subject.data['sci_area'].id
                 if (filter_area != undefined) {
                     sci_id = filter_area.id
                 }
-                axios.get(sci_areaUrl.replace(':id', sci_id))
+                httpsAxios.get(sci_areaUrl.replace(':id', sci_id))
                     .then(resp_area => {
                         let areas = [resp_subject.data['sci_area']]
                         let types = intersect(resp_subject.data['types'], resp_area.data['types'])
@@ -104,7 +105,7 @@ function Material_Reservation(props) {
 
 
     function searchDefaultFilters(material) {
-        axios.get(typesUrl)
+        httpsAxios.get(typesUrl)
             .then(resp => {
                 setCheckboxes(resp.data['types'].reduce(
                     (options, option) => ({
@@ -117,9 +118,9 @@ function Material_Reservation(props) {
             }).catch(err => setError(Response_Handler(err.response)))
 
 
-        axios.get(sci_areasUrl)
+        httpsAxios.get(sci_areasUrl)
             .then(resp_sci_areas => {
-                axios.get(subjectsUrl)
+                httpsAxios.get(subjectsUrl)
                     .then(resp_subjects => {
                         setSci_Areas(resp_sci_areas.data['sci_areas'])
                         setSubjects(resp_subjects.data['subjects'])

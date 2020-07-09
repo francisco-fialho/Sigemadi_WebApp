@@ -9,10 +9,11 @@ function Reservation(props) {
 
     const [reservations, setReservations] = useState([])
     const [error, setError] = useState(null)
+    const httpsAxios = axios.create({ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
 
     useEffect(() => {
         const id = JSON.parse(localStorage.getItem('userinfo')).id
-        axios.get(reservationsUserUrl.replace(':id', id))
+        httpsAxios.get(reservationsUserUrl.replace(':id', id))
             .then(resp => {
                 setReservations(resp.data['reservations'])
             })
@@ -47,6 +48,7 @@ function Reservation(props) {
                                                 <List.Content>
                                                     <List.Header>{request.id}</List.Header>
                                                     <List.Description>{request.subject} | {request.date} | {request.hour} </List.Description>
+                                                    <List.Description> Duration {request.duration} </List.Description>
                                                 </List.Content>
                                             </List.Item>
 

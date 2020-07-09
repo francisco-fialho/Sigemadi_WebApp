@@ -12,11 +12,12 @@ function Subjects_Management(props) {
     const [subject, setSubject] = useState('')
     const [sci_area, setSci_Area] = useState({})
     const [error, setError] = useState(null)
+    const httpsAxios = axios.create({ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
 
     useEffect(() => {
         const id = props.match.params['id']
 
-        axios.get(sci_areaUrl.replace(':id', id))
+        httpsAxios.get(sci_areaUrl.replace(':id', id))
             .then(resp => {
                 setSubjects(resp.data['subjects'] || [])
                 setSci_Area({ name: resp.data.name, id: id })
@@ -24,7 +25,7 @@ function Subjects_Management(props) {
     }, [])
 
     function getSubjects() {
-        axios.get(sci_areaUrl.replace(':id', sci_area.id))
+        httpsAxios.get(sci_areaUrl.replace(':id', sci_area.id))
             .then(resp => {
                 setSubjects(resp.data['subjects'] || [])
             }).catch(err => setError(Response_Handler(err.response)))
@@ -33,7 +34,7 @@ function Subjects_Management(props) {
     function deleteSubject(id) {
         const deleteButton = document.getElementById(`delete${id}`)
         deleteButton.disabled = true
-        axios.delete(subjectsSci_Area_By_IdUrl.replace(':sciAreaId', sci_area.id) + `/${id}`)
+        httpsAxios.delete(subjectsSci_Area_By_IdUrl.replace(':sciAreaId', sci_area.id) + `/${id}`)
             .then(resp => {
                 Response_Handler(resp)
                 setTimeout(() => getSubjects(), 3000);
@@ -47,7 +48,7 @@ function Subjects_Management(props) {
 
         let data = document.getElementById('addsubject')
         if (data.value != '' && subject != '') {
-            axios.post(subjectsSci_Area_By_IdUrl.replace(':sciAreaId', sci_area.id), { 'name': subject })
+            httpsAxios.post(subjectsSci_Area_By_IdUrl.replace(':sciAreaId', sci_area.id), { 'name': subject })
                 .then(resp => {
                     data.value = ''
                     Response_Handler(resp)

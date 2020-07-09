@@ -14,12 +14,13 @@ function Reservation_Details(props) {
     })
 
     const [error, setError] = useState(null)
-    const [disableButton,setDisableButton] = useState(false)
+    const [disableButton, setDisableButton] = useState(false)
+    const httpsAxios = axios.create({ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
 
 
     useEffect(() => {
         const id = props.match.params['id']
-        axios.get(reservationUrl.replace(':id', id))
+        httpsAxios.get(reservationUrl.replace(':id', id))
             .then(resp => {
                 setRequest({
                     ...resp.data,
@@ -31,7 +32,7 @@ function Reservation_Details(props) {
 
     function deleteReservation() {
         setDisableButton(true)
-        axios.delete(reservationUrl.replace(':id', request.id))
+        httpsAxios.delete(reservationUrl.replace(':id', request.id))
             .then(resp => {
                 Response_Handler(resp)
                 setTimeout(() => props.history.push(props.location.pathname.replace(`/${request.id}`, '')), 3000)
@@ -56,6 +57,9 @@ function Reservation_Details(props) {
                                 </Card.Content>
                                 <Card.Content extra>
                                     {request.subject} | {request.date} | {request.hour}
+                                    <div>
+                                        Duration: {request.duration}
+                                    </div>
                                     <Divider />
                                     <Header size='small'>Groups: {request.nr_groups} </Header>
                                 </Card.Content>

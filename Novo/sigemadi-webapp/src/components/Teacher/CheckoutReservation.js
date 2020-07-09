@@ -6,11 +6,14 @@ import { SemanticToastContainer, toast } from 'react-semantic-toasts'
 import Filter from '../Utils/Filter'
 import axios from 'axios'
 import { subjectsUrl, reservationsUrl } from '../Utils/Links'
+import Option from '../Utils/Option'
 
 
 const MAX = '10'
 const MIN = '1'
 const GROUP_MAX = '15'
+const durationSlots = ['1:30:00', '3:00:00', '4:30:00']
+
 function Checkout_Reservation(props) {
 
     const [date, setDate] = useState('')
@@ -20,14 +23,16 @@ function Checkout_Reservation(props) {
     const [subjects, setSubjects] = useState([])
     const [subject, setSubject] = useState(null)
     const [groups, setGroups] = useState('')
+    const [duration, setDuration] = useState(durationSlots[0])
     const [error, setError] = useState(null)
     const [disableButton, setDisableButton] = useState(false)
+    const httpsAxios = axios.create({ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
 
 
     useEffect(() => {
         setUser(JSON.parse(localStorage.getItem('userinfo')))
 
-        axios.get(subjectsUrl)
+        httpsAxios.get(subjectsUrl)
             .then(resp => {
                 setSubjects(resp.data['subjects'])
             })
@@ -135,7 +140,7 @@ function Checkout_Reservation(props) {
 
         if (verifyQuantity && verified) {
             setDisableButton(true)
-            axios.post(reservationsUrl, { 'user_id': user.id, 'subject': subject.id, 'date': `${date} ${time}`, 'groups': groups, 'materials': material })
+            httpsAxios.post(reservationsUrl, { 'user_id': user.id, 'subject': subject.id, 'date': `${date} ${time}`, 'groups': groups, 'materials': material, 'duration': duration })
                 .then(resp => {
                     Response_Handler(resp)
                     setTimeout(() => {
@@ -208,6 +213,10 @@ function Checkout_Reservation(props) {
                                         Select a Subject:
                                         <div style={{ display: 'inline-block' }}>
                                             <Filter changeFilter={onChangeFilter} name='subject' types={subjects} value={findSubject()} optionAll={findSubject() == 'all'} />
+                                        </div>
+                                        <div style={{ display: 'inline-block', marginLeft:'15%' }}>
+                                        Select duration:
+                                        <Option values={durationSlots} value={duration} changeOption={(value) => setDuration(value)} />
                                         </div>
                                         <Header size='small' style={{ marginTop: '5%' }}>Select a Date and Hour:</Header>
                                         <DateTime setDayTime={setDayTime} />

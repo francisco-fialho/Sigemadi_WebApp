@@ -20,6 +20,7 @@ function Material_Management(props) {
     const [modal, setModal] = useState(false)
     const [bulkMaterial, setBulkMaterial] = useState({})
     const [error, setError] = useState(null)
+    const httpsAxios = axios.create({ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
 
 
     const [materials, setMaterials] = useState([])
@@ -67,7 +68,7 @@ function Material_Management(props) {
         else url += '&'
         url += `state=available&page=${pageNumber}`
 
-        axios.get(materialsUrl + url)
+        httpsAxios.get(materialsUrl + url)
             .then(resp => {
                 const data = resp.data['materials']
                 if (data.length == 0 && materialAdded.length == 0) {
@@ -102,7 +103,7 @@ function Material_Management(props) {
         detailButton.disabled = true
 
 
-        axios.delete(materialUrl.replace(':id', id), { data: { "quantity": bulkMaterial.id != undefined ? bulkMaterial.delete_quantity : 1 } })
+        httpsAxios.delete(materialUrl.replace(':id', id), { data: { "quantity": bulkMaterial.id != undefined ? bulkMaterial.delete_quantity : 1 } })
             .then(resp => {
                 Response_Handler(resp)
                 setTimeout(() => setFilters(props.location.search), 3000)
@@ -144,7 +145,7 @@ function Material_Management(props) {
 
             let deleteButton = <Button id={'delete' + material.id} compact onClick={() => deleteMaterial(material.id)} icon='remove' content='Delete Material' color='red'></Button>
 
-            if (material.id.slice(0, 2) === '00') {
+            if (material.id.split('-')[0]==0) {
                 deleteButton = <Button id={'delete' + material.id} compact onClick={() => deleteBulkMaterial(material)} icon='remove' content='Delete Material' color='red'></Button>
 
             }

@@ -18,13 +18,14 @@ function New_Material(props) {
     const [quantity, setQuantity] = useState(1)
     const [error, setError] = useState(null)
     const [disableButton,setDisableButton] = useState(false)
+    const httpsAxios = axios.create({ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
 
 
     useEffect(() => {
         const role = JSON.parse(localStorage.getItem('userinfo')).roles.find(role => role.name === 'lab_responsible')
-        axios.get(sci_areaUrl.replace(':id', role.sci_area_id))
+        httpsAxios.get(sci_areaUrl.replace(':id', role.sci_area_id))
             .then(response => {
-                axios.get(sci_areasUrl)
+                httpsAxios.get(sci_areasUrl)
                     .then(r => {
                         const specific = r.data['sci_areas'].find(s => s.id === role.sci_area_id)
                         const geral = r.data['sci_areas'].find(s => s.id === 0)
@@ -49,7 +50,7 @@ function New_Material(props) {
         
         setDisableButton(true)
 
-        axios.post(materialsUrl, { "quantity": quantity, "type": type.id })
+        httpsAxios.post(materialsUrl, { "quantity": quantity, "type": type.id })
             .then(resp => {
                 Response_Handler(resp)
                 setTimeout(() => props.history.push(props.location.pathname.replace('/addmaterial', '/material')), 3000)
@@ -67,7 +68,7 @@ function New_Material(props) {
 
     function onChangeArea(value) {
         if (value.id != 'all') {
-            axios.get(sci_areaUrl.replace(':id', value.id))
+            httpsAxios.get(sci_areaUrl.replace(':id', value.id))
                 .then(resp => {
                     setSci_Area(value)
                     setTypes(resp.data['types'])

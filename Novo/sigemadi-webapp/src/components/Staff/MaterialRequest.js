@@ -27,6 +27,7 @@ function Material_Request(props) {
     const [result, setResult] = useState('')
     const [checkboxes, setCheckboxes] = useState([])
     const [error, setError] = useState(null)
+    const httpsAxios = axios.create({ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
 
     useEffect(() => {
 
@@ -96,7 +97,7 @@ function Material_Request(props) {
         else url += '&'
         url += `state=available&page=${pageNumber}`
 
-        axios.get(materialsUrl + url)
+        httpsAxios.get(materialsUrl + url)
             .then(async resp => {
                 const data = resp.data['materials']
 
@@ -141,7 +142,7 @@ function Material_Request(props) {
             })
 
 
-            const resp = await axios.get(materialsUrl + material)
+            const resp = await httpsAxios.get(materialsUrl + material)
 
             resp.data['materials'].map(m => {
                 if (m.can_be_reported) {
@@ -188,7 +189,7 @@ function Material_Request(props) {
         if (result != null) {
             handleClose()
             const id = result
-            axios.get(materialUrl.replace(':id', id))
+            httpsAxios.get(materialUrl.replace(':id', id))
                 .then(resp => {
                     if (resp.data.state === 'available') {
                         selectCheckBox(result)

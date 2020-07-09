@@ -24,6 +24,7 @@ function Request_Details(props) {
     const [user, setUser] = useState(null)
     const [error, setError] = useState(null)
     const [disableButton, setDisableButton] = useState(false)
+    const httpsAxios = axios.create({ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
 
 
     useEffect(() => {
@@ -33,7 +34,7 @@ function Request_Details(props) {
     }, [])
 
     function getRequestInfo(id) {
-        axios.get(requestUrl.replace(':id', id))
+        httpsAxios.get(requestUrl.replace(':id', id))
             .then(resp => {
                 let materialsFiltered = resp.data['materials']
                 if (resp.data['close_date'] === undefined) {
@@ -88,7 +89,7 @@ function Request_Details(props) {
     function endRequest() {
         setDisableButton(true)
 
-        axios.patch(requestUrl.replace(':id', request.id), {})
+        httpsAxios.patch(requestUrl.replace(':id', request.id), {})
             .then(resp => {
                 Response_Handler(resp)
                 setTimeout(() => getRequestInfo(request.id), 3000)
@@ -106,7 +107,7 @@ function Request_Details(props) {
         materialsRemoved.map((material, idx) => {
             const id = request.materials.find(m => m.name === material.name).id
             setTimeout(() => {
-                axios.delete(materialRequestUrl.replace(':reqId', request.id).replace(':id', id), { data: { 'quantity': material.quantity } })
+                httpsAxios.delete(materialRequestUrl.replace(':reqId', request.id).replace(':id', id), { data: { 'quantity': material.quantity } })
                     .then(resp => {
                         Response_Handler(resp)
                         if (idx + 1 === materialsRemoved.length) {
@@ -156,19 +157,23 @@ function Request_Details(props) {
         confirmButton.disabled = true
         cancelButton.disabled = true
 
-        axios.delete(materialRequestUrl.replace(':reqId', request.id).replace(':id', id), { data: { 'quantity': 1 } })
+        setDisableButton(true)
+
+        httpsAxios.delete(materialRequestUrl.replace(':reqId', request.id).replace(':id', id), { data: { 'quantity': 1 } })
             .then(resp => {
-                axios.post(reportMaterialUrl.replace(':id', id), { "description": description, "user": user.id })
+                httpsAxios.post(reportMaterialUrl.replace(':id', id), { "description": description, "user": user.id })
                     .then(resp => {
                         Response_Handler(resp)
                         setTimeout(() => {
                             getRequestInfo(request.id)
+                            setDisableButton(false)
                         }, 3000)
                     })
                     .catch(err => {
                         Response_Handler(err.response)
                     })
             }).catch(err => {
+                setDisableButton(false)
                 confirmButton.disabled = false
                 cancelButton.disabled = false
                 Response_Handler(err.response)
@@ -182,7 +187,7 @@ function Request_Details(props) {
         cancelButton.disabled = true
 
 
-        axios.delete(reportSubmissionUrl.replace(':reqId', request.id).replace(':id', id))
+        httpsAxios.delete(reportSubmissionUrl.replace(':reqId', request.id).replace(':id', id))
             .then(resp => {
                 getRequestInfo(request.id)
             }).catch(err => {
@@ -248,7 +253,7 @@ function Request_Details(props) {
     function buildMaterialInfo() {
         return materialsRemoved.map(material => {
 
-            if (material.id.slice(0, 2) === '00') {
+            if (material.id.split('-')[0]==0) {
                 return <List.Item key={material.id}>
                     <List.Content floated='left'>
                         <Header>{material.name}</Header>

@@ -18,6 +18,7 @@ function FilterMaterial(props) {
     const [ready, setReady] = useState(false)
     const [reset, setReset] = useState('collapse')
     const [error, setError] = useState(null)
+    const httpsAxios = axios.create({ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
 
     useEffect(() => {
 
@@ -48,11 +49,11 @@ function FilterMaterial(props) {
     }, [ready])
 
     function searchDefaultFilters(hasQuery) {
-        axios.get(sci_areasUrl)
+        httpsAxios.get(sci_areasUrl)
             .then(resp_areas => {
-                axios.get(subjectsUrl)
+                httpsAxios.get(subjectsUrl)
                     .then(resp_subjects => {
-                        axios.get(typesUrl)
+                        httpsAxios.get(typesUrl)
                             .then(resp_types => {
                                 setSci_Areas(resp_areas.data['sci_areas'])
                                 setSubjects(resp_subjects.data['subjects'])
@@ -86,7 +87,7 @@ function FilterMaterial(props) {
     }
 
     function searchSci_Area(lastFilter, filter_subject, filter_type, filtersUrl) {
-        axios.get(sci_areaUrl.replace(':id', lastFilter.id))
+        httpsAxios.get(sci_areaUrl.replace(':id', lastFilter.id))
             .then(resp => {
                 let subj = intersect(resp.data['subjects'], subjects)
                 let types = intersect(resp.data['types'], materialTypes)
@@ -115,14 +116,14 @@ function FilterMaterial(props) {
     }
 
     function searchSubjects(lastFilter, filter_area, filter_type, filtersUrl) {
-        axios.get(subjectUrl.replace(':id', lastFilter.id))
+        httpsAxios.get(subjectUrl.replace(':id', lastFilter.id))
             .then(resp_subject => {
 
                 let sci_id = resp_subject.data['sci_area'].id
                 if (filter_area != undefined) {
                     sci_id = filter_area.id
                 }
-                axios.get(sci_areaUrl.replace(':id', sci_id))
+                httpsAxios.get(sci_areaUrl.replace(':id', sci_id))
                     .then(resp_area => {
                         let areas = intersect([resp_subject.data['sci_area']], sci_areas)
                         let types = intersect(resp_subject.data['types'], resp_area.data['types'])
@@ -150,7 +151,7 @@ function FilterMaterial(props) {
     }
 
     function searchTypes(lastFilter, filter_area, filter_subject, filtersUrl) {
-        axios.get(typeUrl.replace(':id', lastFilter.id))
+        httpsAxios.get(typeUrl.replace(':id', lastFilter.id))
             .then(resp_type => {
                 let areas = intersect([resp_type.data['sci_area']], sci_areas)
                 let subj = intersect(resp_type.data['subjects'], subjects)
@@ -161,13 +162,13 @@ function FilterMaterial(props) {
                     sci_id = filter_area.id
                 }
 
-                axios.get(sci_areaUrl.replace(':id', sci_id))
+                httpsAxios.get(sci_areaUrl.replace(':id', sci_id))
                     .then(resp_area => {
 
                         subj = intersect(resp_area.data['subjects'], subj)
 
                         if (filter_subject != undefined) {
-                            axios.get(subjectUrl.replace(':id', filter_subject.id))
+                            httpsAxios.get(subjectUrl.replace(':id', filter_subject.id))
                                 .then(resp_subject => {
                                     types = intersect(resp_subject.data['types'], types)
                                     if (types.length == 0) types = [lastFilter]

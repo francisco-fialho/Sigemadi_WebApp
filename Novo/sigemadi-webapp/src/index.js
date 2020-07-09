@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter } from 'react-router-dom'
 import App from './components/App'
+import Login from './components/Login/Login'
 import * as serviceWorker from './serviceWorker';
 
 
@@ -9,13 +10,9 @@ import * as serviceWorker from './serviceWorker';
 ReactDOM.render(
     <React.StrictMode>
         <BrowserRouter>
-            {
-                //<Login>
-            }
-            <App />
-            {
-                //</Login>
-            }
+            <Login>
+                <App />
+            </Login>
         </BrowserRouter>
     </React.StrictMode >,
     document.getElementById('root')
