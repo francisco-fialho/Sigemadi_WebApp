@@ -16,7 +16,7 @@ const Handler = (response) => {
             size: 'mini',
             description: 'Something went wrong, please try again later!'
         })
-        return <Page500 /> 
+        return <Page500 />
     }
 
     else if (response.status == 201 || response.status == 200) {
@@ -33,7 +33,7 @@ const Handler = (response) => {
     else {
         toast({
             type: 'error',
-            title: response.data.title || 'Something Went Wrong' ,
+            title: response.data.title || 'Something Went Wrong',
             time: 2000,
             size: 'mini',
             description: response.data.detail || 'Something went wrong, please try again later!',
@@ -42,10 +42,12 @@ const Handler = (response) => {
         if (response.status == 400) {
             return <Page400 />
         }
-       
-       //VERIFICAR SE FOR 401 QUER DIZER QUE O TEMPO DO JWT CHEGOU AO FIM 
+
+        //VERIFICAR SE FOR 401 QUER DIZER QUE O TEMPO DO JWT CHEGOU AO FIM 
         if (response.status == 401) {
+            localStorage.clear()
             return <Redirect to='/login' />
+
         }
         if (response.status == 404) {
             return <Page404 />

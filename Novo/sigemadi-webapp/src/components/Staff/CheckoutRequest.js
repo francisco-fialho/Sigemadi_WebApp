@@ -4,7 +4,7 @@ import axios from 'axios'
 import { Input, Button, Card, Image, Header, List, Divider, Message, Icon } from 'semantic-ui-react'
 import { userUrl, requestsUrl, requestUrl, userRolesUrl, requestUpdateUrl } from '../Utils/Links'
 import { SemanticToastContainer, toast } from 'react-semantic-toasts';
-import Response_Handler from '../ResponseHandler'
+import ResponseHandler from '../ResponseHandler'
 
 const MIN = '1'
 const MAX = '10'
@@ -17,7 +17,7 @@ function Checkout_Request(props) {
     const [name, setName] = useState('Name')
     const [photo, setPhoto] = useState(ProfilePicMatthew)
     const [error, setError] = useState(null)
-    const [disableButton,setDisableButton] = useState(false)
+    const [disableButton, setDisableButton] = useState(false)
     const httpsAxios = axios.create({ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
 
     useEffect(() => {
@@ -30,7 +30,10 @@ function Checkout_Request(props) {
                     setId(resp.data["user_id"])
                     setName(resp.data["user_name"])
                     setPhoto(`data:image/jpeg;base64,${resp.data['user_photo']}`)
-                }).catch(err => setError(Response_Handler(err.response)))
+                }).catch(err => {
+                    const error = ResponseHandler(err.response)
+                    setTimeout(() => { setError(error) }, 3000)
+                })
         }
 
         const saveObject = requestId == undefined ? 'new_material' : `${requestId}_material`
@@ -73,16 +76,22 @@ function Checkout_Request(props) {
                             setPhoto(`data:image/jpeg;base64,${resp.data['photo']}`)
                         }
                     })
-                    .catch(err => Response_Handler(err.response))
+                    .catch(err => {
+                        const error = ResponseHandler(err.response)
+                        setTimeout(() => { setError(error) }, 3000)
+                    })
             })
-            .catch(err => Response_Handler(err.response))
+            .catch(err => {
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
+            })
     }
 
     function buildMaterialInfo() {
         return (<List size='large' divided style={{ marginBottom: '5%' }}>
             {
                 material.map(material => {
-                    if (material.id.split('-')[0]==0) {
+                    if (material.id.split('-')[0] == 0) {
                         return <List.Item key={material.id}>
                             <List.Content floated='left'>
                                 <List.Header >{material.name}</List.Header>
@@ -112,7 +121,7 @@ function Checkout_Request(props) {
         let verifyQuantity = false
 
         let materials_requested = material.reduce((materials, material) => {
-            if (material.id.split('-')[0]==0) {
+            if (material.id.split('-')[0] != 0) {
                 materials.push({ 'material_id': material.id, 'quantity': '1' })
             }
             else {
@@ -143,6 +152,8 @@ function Checkout_Request(props) {
     }
 
     function onSubmit() {
+        const saveObject = requestId == undefined ? 'new_material' : `${requestId}_material`
+
 
         if (id != 'ID') {
 
@@ -150,30 +161,32 @@ function Checkout_Request(props) {
             if (material === null) return
             setDisableButton(true)
 
-            if (requestId === null) {
+            if (requestId == null) {
                 httpsAxios.post(requestsUrl, { 'materials_requested': material, 'user_id': id })
                     .then(resp => {
-                        Response_Handler(resp)
+                        ResponseHandler(resp)
                         setTimeout(() => {
-                            localStorage.removeItem('material')
+                            localStorage.removeItem(saveObject)
                             props.history.push('/auth/staff/request')
                         }, 3000)
                     }).catch(err => {
-                        Response_Handler(err.response)
                         setDisableButton(false)
+                        const error = ResponseHandler(err.response)
+                        setTimeout(() => { setError(error) }, 3000)
                     })
             }
             else {
                 httpsAxios.put(requestUpdateUrl.replace(':id', requestId), { "materials": material })
                     .then(resp => {
-                        Response_Handler(resp)
+                        ResponseHandler(resp)
                         setTimeout(() => {
-                            localStorage.removeItem('material')
+                            localStorage.removeItem(saveObject)
                             props.history.push(`/auth/staff/request/${requestId}`)
                         }, 3000)
                     }).catch(err => {
-                        Response_Handler(err.response)
                         setDisableButton(false)
+                        const error = ResponseHandler(err.response)
+                        setTimeout(() => { setError(error) }, 3000)
                     })
             }
         }

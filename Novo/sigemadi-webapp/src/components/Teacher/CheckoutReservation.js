@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import DateTime from '../Utils/DateTime'
 import { Header, Input, Button, List, Divider, Message, Icon } from 'semantic-ui-react'
-import Response_Handler from '../ResponseHandler'
+import ResponseHandler from '../ResponseHandler'
 import { SemanticToastContainer, toast } from 'react-semantic-toasts'
 import Filter from '../Utils/Filter'
 import axios from 'axios'
@@ -36,7 +36,10 @@ function Checkout_Reservation(props) {
             .then(resp => {
                 setSubjects(resp.data['subjects'])
             })
-            .catch(err => setError(Response_Handler(err.response)))
+            .catch(err => {
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
+            })
 
         const material = JSON.parse(localStorage.getItem('reservation'))
         if (material === null) {
@@ -142,7 +145,7 @@ function Checkout_Reservation(props) {
             setDisableButton(true)
             httpsAxios.post(reservationsUrl, { 'user_id': user.id, 'subject': subject.id, 'date': `${date} ${time}`, 'groups': groups, 'materials': material, 'duration': duration })
                 .then(resp => {
-                    Response_Handler(resp)
+                    ResponseHandler(resp)
                     setTimeout(() => {
                         localStorage.removeItem('reservation')
                         props.history.push('/auth/teacher/reservation')
@@ -150,7 +153,8 @@ function Checkout_Reservation(props) {
                 })
                 .catch(err => {
                     setDisableButton(false)
-                    Response_Handler(err.response)
+                    const error = ResponseHandler(err.response)
+                    setTimeout(() => { setError(error) }, 3000)
                 })
         }
     }
@@ -214,8 +218,8 @@ function Checkout_Reservation(props) {
                                         <div style={{ display: 'inline-block' }}>
                                             <Filter changeFilter={onChangeFilter} name='subject' types={subjects} value={findSubject()} optionAll={findSubject() == 'all'} />
                                         </div>
-                                        <div style={{ display: 'inline-block', marginLeft:'15%' }}>
-                                        Select duration:
+                                        <div style={{ display: 'inline-block', marginLeft: '15%' }}>
+                                            Select duration:
                                         <Option values={durationSlots} value={duration} changeOption={(value) => setDuration(value)} />
                                         </div>
                                         <Header size='small' style={{ marginTop: '5%' }}>Select a Date and Hour:</Header>

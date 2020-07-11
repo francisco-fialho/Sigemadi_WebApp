@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Header, Button, Input, Divider, Message, Grid, Card, Modal, Icon } from 'semantic-ui-react'
 import axios from 'axios'
 import { materialUrl, materialsUrl } from '../../Utils/Links'
-import Response_Handler from '../../ResponseHandler'
+import ResponseHandler from '../../ResponseHandler'
 import FilterMaterial from '../../FilterMaterial'
 import { SemanticToastContainer, toast } from 'react-semantic-toasts';
 
@@ -92,7 +92,10 @@ function Material_Management(props) {
 
                 setSearchFilters(filters)
             })
-            .catch(err => setError(Response_Handler(err.response)))
+            .catch(err => {
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
+            })
     }
 
 
@@ -105,14 +108,15 @@ function Material_Management(props) {
 
         httpsAxios.delete(materialUrl.replace(':id', id), { data: { "quantity": bulkMaterial.id != undefined ? bulkMaterial.delete_quantity : 1 } })
             .then(resp => {
-                Response_Handler(resp)
+                ResponseHandler(resp)
                 setTimeout(() => setFilters(props.location.search), 3000)
 
             })
             .catch(err => {
-                Response_Handler(err.response)
                 deleteButton.disabled = false
                 detailButton.disabled = false
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
             })
 
         if (bulkMaterial.id)
@@ -145,15 +149,15 @@ function Material_Management(props) {
 
             let deleteButton = <Button id={'delete' + material.id} compact onClick={() => deleteMaterial(material.id)} icon='remove' content='Delete Material' color='red'></Button>
 
-            if (material.id.split('-')[0]==0) {
+            if (material.id.split('-')[0] == 0) {
                 deleteButton = <Button id={'delete' + material.id} compact onClick={() => deleteBulkMaterial(material)} icon='remove' content='Delete Material' color='red'></Button>
 
             }
             return (
                 <Grid.Column>
                     <Card centered>
-                    <Card.Header>{material.name}</Card.Header>
-                    <Card.Description>{material.id}</Card.Description>
+                        <Card.Header>{material.name}</Card.Header>
+                        <Card.Description>{material.id}</Card.Description>
                         <Card.Content extra floated='right'>
                             <Button.Group fluid>
                                 <Button id={'detail' + material.id} content='Details' icon='microchip' onClick={() => props.history.push(props.location.pathname + '/' + material.id)}></Button>

@@ -3,7 +3,7 @@ import ProfilePic from '../../assets/molly.png'
 import { Card, Button, Header, Image, Divider, Message, Icon } from 'semantic-ui-react'
 import { reservationUrl } from '../Utils/Links'
 import axios from 'axios'
-import Response_Handler from '../ResponseHandler'
+import ResponseHandler from '../ResponseHandler'
 import { SemanticToastContainer } from 'react-semantic-toasts'
 
 
@@ -27,18 +27,22 @@ function Reservation_Details(props) {
                     id: id
                 })
             })
-            .catch(err => setError(Response_Handler(err.response)))
+            .catch(err => {
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
+            })
     }, [])
 
     function deleteReservation() {
         setDisableButton(true)
         httpsAxios.delete(reservationUrl.replace(':id', request.id))
             .then(resp => {
-                Response_Handler(resp)
+                ResponseHandler(resp)
                 setTimeout(() => props.history.push(props.location.pathname.replace(`/${request.id}`, '')), 3000)
             }).catch(err => {
-                Response_Handler(err.response)
                 setDisableButton(false)
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
             })
     }
 

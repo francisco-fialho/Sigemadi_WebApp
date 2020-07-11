@@ -14,15 +14,15 @@ function Home(props) {
 
     //const [modal, setModal] = useState(false)
 
-    function cleanCookies() {
-        //cookies.remove('request')
-        localStorage.removeItem('userinfo')
-    }
+    // function cleanCookies() {
+    //     //cookies.remove('request')
+    //     localStorage.removeItem('userinfo')
+    // }
 
-    useEffect(() => {
-        //cleanCookies()
-        localStorage.clear()
-    }, [])
+    // useEffect(() => {
+    //     //cleanCookies()
+    //     localStorage.clear()
+    // }, [])
 
 
     // function handleOpen() {

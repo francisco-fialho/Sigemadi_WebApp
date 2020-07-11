@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Header, List, Button, Input, Divider, Message, Icon } from 'semantic-ui-react'
 import axios from 'axios'
 import { sci_areaUrl, subjectsSci_Area_By_IdUrl } from '../Utils/Links'
-import Response_Handler from '../ResponseHandler'
+import ResponseHandler from '../ResponseHandler'
 import { SemanticToastContainer } from 'react-semantic-toasts';
 
 function Subjects_Management(props) {
@@ -21,14 +21,20 @@ function Subjects_Management(props) {
             .then(resp => {
                 setSubjects(resp.data['subjects'] || [])
                 setSci_Area({ name: resp.data.name, id: id })
-            }).catch(err => setError(Response_Handler(err.response)))
+            }).catch(err => {
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
+            })
     }, [])
 
     function getSubjects() {
         httpsAxios.get(sci_areaUrl.replace(':id', sci_area.id))
             .then(resp => {
                 setSubjects(resp.data['subjects'] || [])
-            }).catch(err => setError(Response_Handler(err.response)))
+            }).catch(err => {
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
+            })
     }
 
     function deleteSubject(id) {
@@ -36,11 +42,12 @@ function Subjects_Management(props) {
         deleteButton.disabled = true
         httpsAxios.delete(subjectsSci_Area_By_IdUrl.replace(':sciAreaId', sci_area.id) + `/${id}`)
             .then(resp => {
-                Response_Handler(resp)
+                ResponseHandler(resp)
                 setTimeout(() => getSubjects(), 3000);
             }).catch(err => {
-                Response_Handler(err.response)
                 deleteButton.disabled = false
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
             })
     }
 
@@ -51,11 +58,12 @@ function Subjects_Management(props) {
             httpsAxios.post(subjectsSci_Area_By_IdUrl.replace(':sciAreaId', sci_area.id), { 'name': subject })
                 .then(resp => {
                     data.value = ''
-                    Response_Handler(resp)
+                    ResponseHandler(resp)
                     setTimeout(() => getSubjects(), 3000);
 
                 }).catch(err => {
-                    Response_Handler(err.response)
+                    const error = ResponseHandler(err.response)
+                    setTimeout(() => { setError(error) }, 3000)
                 })
         }
     }

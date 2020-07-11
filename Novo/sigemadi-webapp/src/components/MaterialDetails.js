@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Label, Header, List, Card, Form, Button, Divider, Message, Icon } from 'semantic-ui-react'
-import Response_Handler from './ResponseHandler'
+import ResponseHandler from './ResponseHandler'
 import { SemanticToastContainer } from 'react-semantic-toasts';
 import { materialUrl } from './Utils/Links'
 
@@ -46,7 +46,8 @@ function Material_Details(props) {
                 })
             })
             .catch(err => {
-                setError(Response_Handler(err.response))
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
             })
     }, [])
 
@@ -71,10 +72,10 @@ function Material_Details(props) {
     function createInfoTable() {
         return titles.map(t => {
             let value = material[t.value]
-            if (t.value === 'subjects'){
-                if (material.id.split('-')[0]==0) value = 'All Subjects'
+            if (t.value === 'subjects') {
+                if (material.id.split('-')[0] == 0) value = 'All Subjects'
                 else value = createMaterialInfo(value)
-            } 
+            }
             return (
                 <List.Item key={t.title}>
                     <List.Content floated='left'>
@@ -90,7 +91,7 @@ function Material_Details(props) {
 
     function canReport() {
         const user = JSON.parse(localStorage.getItem('userinfo'))
-        return user.selectedRole === 'staff'
+        return user.selectedRole.name === 'staff'
     }
 
     function buildStateInfo() {
@@ -140,7 +141,7 @@ function Material_Details(props) {
                                     <Card.Content>
                                         <Card.Header>
                                             Description
-                        </Card.Header>
+                                    </Card.Header>
                                         <Divider />
                                         <Card.Description>
                                             <Card.Header size='medium'>{material.description}</Card.Header>
@@ -151,7 +152,7 @@ function Material_Details(props) {
                                     <Card.Content>
                                         <Card.Header>
                                             More Information
-                        </Card.Header>
+                                    </Card.Header>
                                         <Divider />
                                         <Card.Description>
                                             {

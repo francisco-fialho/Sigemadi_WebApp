@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Header, List, Button, Input, Divider } from 'semantic-ui-react'
 import axios from 'axios'
 import { sci_areasUrl, sci_areaUrl } from '../Utils/Links'
-import Response_Handler from '../ResponseHandler'
+import ResponseHandler from '../ResponseHandler'
 import { SemanticToastContainer } from 'react-semantic-toasts';
 
 function Scientific_Areas_Management(props) {
@@ -13,8 +13,8 @@ function Scientific_Areas_Management(props) {
     const [sci_area, setSci_Area] = useState('')
     const [error, setError] = useState(null)
     const httpsAxios = axios.create({ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
-    
-    
+
+
     useEffect(() => {
         getSci_Areas()
     }, [])
@@ -24,7 +24,10 @@ function Scientific_Areas_Management(props) {
         httpsAxios.get(sci_areasUrl)
             .then(resp => {
                 setSci_Areas(resp.data['sci_areas'].filter(area => area.id != 0))
-            }).catch(err => setError(Response_Handler(err.response)))
+            }).catch(err => {
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
+            })
     }
 
     function deleteArea(id) {
@@ -32,12 +35,13 @@ function Scientific_Areas_Management(props) {
         deleteButton.disabled = true
         httpsAxios.delete(sci_areaUrl.replace(':id', id))
             .then(resp => {
-                Response_Handler(resp)
+                ResponseHandler(resp)
                 setTimeout(() => getSci_Areas(), 200)
 
             }).catch(err => {
                 deleteButton.disabled = false
-                Response_Handler(err.response)
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
             })
     }
 
@@ -48,12 +52,13 @@ function Scientific_Areas_Management(props) {
         if (data.value != '' && sci_area != '')
             httpsAxios.post(sci_areasUrl, { 'name': sci_area })
                 .then(resp => {
-                    Response_Handler(resp)
+                    ResponseHandler(resp)
                     data.value = ''
                     setTimeout(() => getSci_Areas(), 3000)
 
                 }).catch(err => {
-                    Response_Handler(err.response)
+                    const error = ResponseHandler(err.response)
+                    setTimeout(() => { setError(error) }, 3000)
                 })
     }
 

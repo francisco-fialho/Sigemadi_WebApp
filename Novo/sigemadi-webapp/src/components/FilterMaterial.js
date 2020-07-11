@@ -3,7 +3,7 @@ import { Button } from 'semantic-ui-react'
 import Filter from './Utils/Filter'
 import axios from 'axios'
 import { sci_areasUrl, typesUrl, typeUrl, subjectsUrl, sci_areaUrl, subjectUrl } from './Utils/Links'
-import Response_Handler from './ResponseHandler'
+import ResponseHandler from './ResponseHandler'
 
 const filterOrder = ["sci_area", "subject", "type"]
 
@@ -61,9 +61,9 @@ function FilterMaterial(props) {
 
                                 if (hasQuery)
                                     setReady(true)
-                            }).catch(err => setError(Response_Handler(err.response)))
-                    }).catch(err => setError(Response_Handler(err.response)))
-            }).catch(err => setError(Response_Handler(err.response)))
+                            }).catch(err => setError(ResponseHandler(err.response)))
+                    }).catch(err => setError(ResponseHandler(err.response)))
+            }).catch(err => setError(ResponseHandler(err.response)))
     }
 
 
@@ -89,18 +89,22 @@ function FilterMaterial(props) {
     function searchSci_Area(lastFilter, filter_subject, filter_type, filtersUrl) {
         httpsAxios.get(sci_areaUrl.replace(':id', lastFilter.id))
             .then(resp => {
-                let subj = intersect(resp.data['subjects'], subjects)
-                let types = intersect(resp.data['types'], materialTypes)
+
+
+                let subj = resp.data['subjects']
+                let types = resp.data['types']
 
 
                 if (filter_type != undefined) {
                     types = intersect(types, [filter_type])
                     if (types.length == 0) types = [filter_type]
+                    subj = intersect(subj, subjects)
                 }
 
                 if (filter_subject != undefined) {
                     subj = intersect(subj, [filter_subject])
                     if (subj.length == 0) subj = [filter_subject]
+                    types = intersect(types, materialTypes)
                 }
 
                 if (ready == true) {
@@ -112,7 +116,7 @@ function FilterMaterial(props) {
                 setSubjects(subj)
                 setTypes(types)
 
-            }).catch(err => setError(Response_Handler(err.response)))
+            }).catch(err => setError(ResponseHandler(err.response)))
     }
 
     function searchSubjects(lastFilter, filter_area, filter_type, filtersUrl) {
@@ -146,8 +150,8 @@ function FilterMaterial(props) {
                         setSci_Areas(areas)
                         setTypes(types)
 
-                    }).catch(err => setError(Response_Handler(err.response)))
-            }).catch(err => setError(Response_Handler(err.response)))
+                    }).catch(err => setError(ResponseHandler(err.response)))
+            }).catch(err => setError(ResponseHandler(err.response)))
     }
 
     function searchTypes(lastFilter, filter_area, filter_subject, filtersUrl) {
@@ -196,10 +200,10 @@ function FilterMaterial(props) {
 
                         setSci_Areas(areas)
                         setSubjects(subj)
-                    }).catch(err => setError(Response_Handler(err.response)))
+                    }).catch(err => setError(ResponseHandler(err.response)))
 
 
-            }).catch(err => setError(Response_Handler(err.response)))
+            }).catch(err => setError(ResponseHandler(err.response)))
     }
 
 

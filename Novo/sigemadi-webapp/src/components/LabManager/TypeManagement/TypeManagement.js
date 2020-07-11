@@ -3,7 +3,7 @@ import { Header, Button, List, Divider } from 'semantic-ui-react'
 import axios from 'axios'
 import Cookies from 'universal-cookie'
 import { sci_areaUrl, typeSci_Area_By_IdUrl } from '../../Utils/Links'
-import Response_Handler from '../../ResponseHandler';
+import ResponseHandler from '../../ResponseHandler';
 import { SemanticToastContainer } from 'react-semantic-toasts';
 
 
@@ -28,8 +28,14 @@ function Type_Management(props) {
                 httpsAxios.get(sci_areaUrl.replace(':id', '0'))
                     .then(resp => {
                         setTypes([...response.data['types'], ...resp.data['types']])
-                    }).catch(err => setError(Response_Handler(err.response)))
-            }).catch(err => setError(Response_Handler(err.response)))
+                    }).catch(err => {
+                        const error = ResponseHandler(err.response)
+                        setTimeout(() => { setError(error) }, 3000)
+                    })
+            }).catch(err => {
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
+            })
     }
 
 
@@ -39,19 +45,20 @@ function Type_Management(props) {
 
         let area = sci_area
 
-        if (id.split('-')[0]==0) area = '0'
+        if (id.split('-')[0] == 0) area = '0'
 
         httpsAxios.delete(typeSci_Area_By_IdUrl.replace(':sciAreaId', area).replace(':id', id))
             .then(resp => {
-                Response_Handler(resp)
+                ResponseHandler(resp)
                 setTimeout(() => searchTypes(sci_area), 3000)
             })
             .catch(err => {
-                Response_Handler(err.response)
                 button.disabled = false
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
             })
     }
-    
+
     function onSubmit() {
         props.history.push('/auth/labmanager/addtype')
     }

@@ -3,7 +3,7 @@ import CheckBox from '../CheckBox/CheckBox'
 import Option from '../Utils/Option'
 import { Card, Image, Button, Icon, Message } from 'semantic-ui-react'
 import { rolesUrl, userRolesUrl, userUrl, sci_areasUrl } from '../Utils/Links'
-import Response_Handler from '../ResponseHandler'
+import ResponseHandler from '../ResponseHandler'
 import { SemanticToastContainer, toast } from 'react-semantic-toasts';
 import axios from 'axios'
 
@@ -18,6 +18,8 @@ function Define_Roles(props) {
     const [error, setError] = useState(null)
     const [disableButton, setDisableButton] = useState(false)
     const httpsAxios = axios.create({ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
+
+    const user = JSON.parse(localStorage.getItem('userinfo'))
 
     useEffect(() => {
         const id = props.match.params['id']
@@ -65,11 +67,23 @@ function Define_Roles(props) {
                                                 []
                                             ))
 
-                                        }).catch(err => setError(Response_Handler(err.response)))
-                                }).catch(err => setError(Response_Handler(err.response)))
+                                        }).catch(err => {
+                                            const error = ResponseHandler(err.response)
+                                            setTimeout(() => { setError(error) }, 3000)
+                                        })
+                                }).catch(err => {
+                                    const error = ResponseHandler(err.response)
+                                    setTimeout(() => { setError(error) }, 3000)
+                                })
                         }
-                    }).catch(err => setError(Response_Handler(err.response)))
-            }).catch(err => setError(Response_Handler(err.response)))
+                    }).catch(err => {
+                        const error = ResponseHandler(err.response)
+                        setTimeout(() => { setError(error) }, 3000)
+                    })
+            }).catch(err => {
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
+            })
 
 
     }, [])
@@ -124,11 +138,30 @@ function Define_Roles(props) {
 
         httpsAxios.put(userRolesUrl.replace(':id', person.id), { 'roles': checked })
             .then(resp => {
-                Response_Handler(resp)
-                setTimeout(() => props.history.push(props.location.pathname.replace(`/${person.id}`, '')), 3000)
+                ResponseHandler(resp)
+
+                //if it is the same user as the app user, then update app user roles
+                if (person.id == user.id) {
+                    httpsAxios.get(userRolesUrl.replace(':id', person.id))
+                        .then(resp => {
+                            user.roles = resp.data['roles']
+                            localStorage.setItem('userinfo', JSON.stringify(user))
+                            setTimeout(() => props.history.push(props.location.pathname.replace(`/${person.id}`, '')), 3000)
+                        }).catch(err => {
+                            const error = ResponseHandler(err.response)
+                            setTimeout(() => {
+                                setError(error)
+                            }, 3000)
+                        })
+                }
+                else
+                    setTimeout(() => props.history.push(props.location.pathname.replace(`/${person.id}`, '')), 3000)
             }).catch(err => {
                 setDisableButton(false)
-                Response_Handler(err.response)
+                const error = ResponseHandler(err.response)
+                setTimeout(() => {
+                    setError(error)
+                }, 3000)
             })
 
 

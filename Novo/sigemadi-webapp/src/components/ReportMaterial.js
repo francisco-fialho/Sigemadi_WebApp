@@ -20,7 +20,7 @@ function Report_Material(props) {
         const userId = JSON.parse(localStorage.getItem('userinfo')).id
         setUser(userId)
         const materialId = props.match.params['id']
-        if (materialId.slice(0, 2) == '00') {
+        if (materialId.split('-')[0] == 0) {
             setDisableButton(true)
 
             props.history.push(props.location.pathname.replace('/report', ''))

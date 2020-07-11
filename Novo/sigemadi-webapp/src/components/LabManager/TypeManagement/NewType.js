@@ -5,7 +5,7 @@ import axios from 'axios'
 import { Card, Header, Segment, Form, TextArea, ButtonGroup, Button, Grid } from 'semantic-ui-react'
 import { sci_areasUrl, sci_areaUrl, subjectsUrl, typeSci_AreaUrl } from '../../Utils/Links'
 import { SemanticToastContainer, toast } from 'react-semantic-toasts';
-import Response_Handler from '../../ResponseHandler'
+import ResponseHandler from '../../ResponseHandler'
 
 
 function New_Type(props) {
@@ -43,14 +43,20 @@ function New_Type(props) {
                             }),
                             []
                         ))
-                    }).catch(err => setError(Response_Handler(err.response)))
-            }).catch(err => setError(Response_Handler(err.response)))
+                    }).catch(err => {
+                        const error = ResponseHandler(err.response)
+                        setTimeout(() => { setError(error) }, 3000)
+                    })
+            }).catch(err => {
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
+            })
 
 
         httpsAxios.get(subjectsUrl)
             .then(resp => {
                 setGeralSubjects(resp.data['subjects'].map(s => s.id))
-            }).catch(err => setError(Response_Handler(err.response)))
+            }).catch(err => setError(ResponseHandler(err.response)))
     }, [])
 
 
@@ -91,11 +97,11 @@ function New_Type(props) {
             httpsAxios.post(typeSci_AreaUrl.replace(':sciAreaId', sci_area.id),
                 { "name": name, "description": description, "subjects": checked })
                 .then(resp => {
-                    Response_Handler(resp)
+                    ResponseHandler(resp)
                     setTimeout(() => props.history.push(props.location.pathname.replace('/addtype', '/type')), 3000)
                 })
                 .catch(err => {
-                    Response_Handler(err.response)
+                    ResponseHandler(err.response)
                     setDisableButton(false)
                 })
         }
@@ -105,11 +111,11 @@ function New_Type(props) {
             httpsAxios.post(typeSci_AreaUrl.replace(':sciAreaId', sci_area.id),
                 { "name": name, "description": description, "subjects": geralSubjects })
                 .then(resp => {
-                    Response_Handler(resp)
+                    ResponseHandler(resp)
                     setTimeout(() => props.history.push(props.location.pathname.replace('/addtype', '/type')), 3000)
                 })
                 .catch(err => {
-                    Response_Handler(err.response)
+                    ResponseHandler(err.response)
                     setDisableButton(false)
                 })
         }

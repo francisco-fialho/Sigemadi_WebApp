@@ -1,53 +1,54 @@
 import React, { useEffect, useState } from 'react'
 import { Redirect, Route } from 'react-router-dom';
-import LoginContext from '../Login/LoginContext';
 
 
-function CustomRoutes(props) {
+function CustomRoute(props) {
 
-    const [route, setRoute] = useState(null)
+    const [route, setRoute] = useState('')
+
 
     useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('userinfo'))
+
         switch (props.role) {
             case 'staff':
                 return setRoute(
-                    //VER COMO È QUE VEM OS ROLES
-                    props.user.roles == 'staff' ? (
+                    user.roles.find(r => r.name == 'staff') ? (
                         <Route {...props} />
                     ) : (
-                            <Redirect to="/login" />
+                            <Redirect to={user.selectedRole.homeRoute} />
                         )
                 );
             case 'teacher':
                 return setRoute(
-                    props.user.roles == 'teacher' ? (
+                    user.roles.find(r => r.name == 'teacher') ? (
                         <Route {...props} />
                     ) : (
-                        <Redirect to="/login" />
+                            <Redirect to={user.selectedRole.homeRoute} />
                         )
                 );
             case 'technician':
                 return setRoute(
-                    props.user.roles == 'technician' ? (
+                    user.roles.find(r => r.name == 'technician') ? (
                         <Route {...props} />
                     ) : (
-                        <Redirect to="/login" />
+                            <Redirect to={user.selectedRole.homeRoute} />
                         )
                 );
             case 'labmanager':
                 return setRoute(
-                    props.user.roles == 'lab_responsible' ? (
+                    user.roles.find(r => r.name == 'lab_responsible') ? (
                         <Route {...props} />
                     ) : (
-                        <Redirect to="/login" />
+                            <Redirect to={user.selectedRole.homeRoute} />
                         )
                 );
             case 'administrator':
                 return setRoute(
-                    props.user.roles == 'administrator' ? (
+                    user.roles.find(r => r.name == 'administrator') ? (
                         <Route {...props} />
                     ) : (
-                        <Redirect to="/login" />
+                            <Redirect to={user.selectedRole.homeRoute} />
                         )
                 );
 
@@ -57,9 +58,9 @@ function CustomRoutes(props) {
                 );
         }
 
-    }, [props.user])
+    }, [props])
 
     return route
 }
 
-export default CustomRoutes
+export default CustomRoute

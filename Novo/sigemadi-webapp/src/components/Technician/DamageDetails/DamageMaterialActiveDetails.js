@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import DamagedMaterialDetails from './DamagedMaterialDetails'
 import { SemanticToastContainer, toast } from 'react-semantic-toasts';
-import Response_Handler from '../../ResponseHandler'
-import { damageUrl, damagesStatesUrl } from '../../Utils/Links' 
-import {Message,Icon} from 'semantic-ui-react'
+import ResponseHandler from '../../ResponseHandler'
+import { damageUrl, damagesStatesUrl } from '../../Utils/Links'
+import { Message, Icon } from 'semantic-ui-react'
 import axios from 'axios'
 import Page404 from '../../Errors/Page404';
 
@@ -13,7 +13,7 @@ function Damage_Material_Active_Details(props) {
         states: []
     })
     const [error, setError] = useState(null)
-    const [disableButton,setDisableButton] = useState(false)
+    const [disableButton, setDisableButton] = useState(false)
     const httpsAxios = axios.create({ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
 
 
@@ -21,19 +21,25 @@ function Damage_Material_Active_Details(props) {
         const id = props.match.params['id']
         httpsAxios.get(damageUrl.replace(':id', id))
             .then(resp => {
-                if(resp.data.state!='to_solve') return setError(<Page404 />)
+                if (resp.data.state != 'to_solve') return setError(<Page404 />)
                 httpsAxios.get(damagesStatesUrl)
                     .then(r => {
                         setMaterial_Report({
                             ...resp.data,
                             states: r.data['states']
                         })
-                    }).catch(err => setError(Response_Handler(err.response)))
-            }).catch(err => setError(Response_Handler(err.response)))
+                    }).catch(err => {
+                        const error = ResponseHandler(err.response)
+                        setTimeout(() => { setError(error) }, 3000)
+                    })
+            }).catch(err => {
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
+            })
     }, [])
 
     function onCancel() {
-        props.history.push(props.location.pathname.replace(`/${material_report.id}`,''))
+        props.history.push(props.location.pathname.replace(`/${material_report.id}`, ''))
     }
 
     function onConfirm() {
@@ -58,11 +64,12 @@ function Damage_Material_Active_Details(props) {
         setDisableButton(true)
         httpsAxios.patch(damageUrl.replace(':id', material_report.id), { "state": material_report.state, "report": material_report.report })
             .then(resp => {
-                Response_Handler(resp)
+                ResponseHandler(resp)
                 setTimeout(() => props.history.push('/auth/tech/damages'), 3000)
             }).catch(err => {
-                Response_Handler(err.response)
                 setDisableButton(false)
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
             })
     }
 

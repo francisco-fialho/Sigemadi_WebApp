@@ -3,7 +3,7 @@ import Filter from '../Utils/Filter'
 import { Header, Button, Form, Divider, Card, Grid, Message, Icon } from "semantic-ui-react"
 import { typesUrl, sci_areasUrl, subjectsUrl, sci_areaUrl, subjectUrl } from '../Utils/Links'
 import axios from 'axios'
-import Response_Handler from '../ResponseHandler'
+import ResponseHandler from '../ResponseHandler'
 import { SemanticToastContainer, toast } from 'react-semantic-toasts'
 
 function Material_Reservation(props) {
@@ -59,18 +59,23 @@ function Material_Reservation(props) {
     function searchSciArea(lastFilter, filter_subject) {
         httpsAxios.get(sci_areaUrl.replace(':id', lastFilter.id))
             .then(resp => {
-                let subj = intersect(resp.data['subjects'], subjects)
-                let types = intersect(resp.data['types'], materialTypes)
+
+                let subj = resp.data['subjects']
+                let types = resp.data['types']
 
                 if (filter_subject != undefined) {
                     subj = intersect(subj, [filter_subject])
                     if (subj.length == 0) subj = [filter_subject]
+                    types = intersect(types, searchedtypes)
                 }
 
                 setSubjects(subj)
                 setSearchedTypes(types)
 
-            }).catch(err => setError(Response_Handler(err.response)))
+            }).catch(err => {
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
+            })
     }
 
     function searchSubjects(lastFilter, filter_area) {
@@ -94,13 +99,19 @@ function Material_Reservation(props) {
                         setSci_Areas(areas)
                         setSearchedTypes(types)
 
-                    }).catch(err => setError(Response_Handler(err.response)))
-            }).catch(err => setError(Response_Handler(err.response)))
+                    }).catch(err => {
+                        const error = ResponseHandler(err.response)
+                        setTimeout(() => { setError(error) }, 3000)
+                    })
+            }).catch(err => {
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
+            })
     }
 
 
     function intersect(array1, array2) {
-        return array1.filter(a => array2.find(b => b.id === a.id) != undefined)
+        return array1.filter(a => array2.find(b => b.id == a.id) != undefined)
     }
 
 
@@ -115,7 +126,10 @@ function Material_Reservation(props) {
                     []
                 ))
                 setTypes(resp.data['types'])
-            }).catch(err => setError(Response_Handler(err.response)))
+            }).catch(err => {
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
+            })
 
 
         httpsAxios.get(sci_areasUrl)
@@ -125,8 +139,14 @@ function Material_Reservation(props) {
                         setSci_Areas(resp_sci_areas.data['sci_areas'])
                         setSubjects(resp_subjects.data['subjects'])
                         setFilters([])
-                    }).catch(err => setError(Response_Handler(err.response)))
-            }).catch(err => setError(Response_Handler(err.response)))
+                    }).catch(err => {
+                        const error = ResponseHandler(err.response)
+                        setTimeout(() => { setError(error) }, 3000)
+                    })
+            }).catch(err => {
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
+            })
 
     }
 

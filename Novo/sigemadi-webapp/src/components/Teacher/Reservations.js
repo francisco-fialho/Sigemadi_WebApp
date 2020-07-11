@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Button, Header, List, Divider } from 'semantic-ui-react'
 import { reservationsUserUrl } from '../Utils/Links'
 import axios from 'axios'
-import Response_Handler from '../ResponseHandler'
+import ResponseHandler from '../ResponseHandler'
 import { SemanticToastContainer } from 'react-semantic-toasts'
 
 function Reservation(props) {
@@ -17,7 +17,10 @@ function Reservation(props) {
             .then(resp => {
                 setReservations(resp.data['reservations'])
             })
-            .catch(err => setError(Response_Handler(err.response)))
+            .catch(err => {
+                const error = ResponseHandler(err.response)
+                                            setTimeout(() => {setError(error)}, 3000)
+            })
     }, [])
 
     function newRequest() {

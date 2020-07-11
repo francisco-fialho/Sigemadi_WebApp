@@ -5,7 +5,7 @@ import { Header, Button, Input, Message, Divider, Grid, Card, Icon, Image, Label
 import Filter from '../Utils/Filter'
 import { requestByUserUrl, requestsUrl } from '../Utils/Links'
 import { SemanticToastContainer, toast } from 'react-semantic-toasts';
-import Response_Handler from '../ResponseHandler'
+import ResponseHandler from '../ResponseHandler'
 
 const requestTypes = [{ name: 'Active', id: true }, { name: 'Old', id: false }]
 
@@ -148,7 +148,10 @@ function Request(props) {
 
 
             })
-            .catch(err => setError(Response_Handler(err.response)))
+            .catch(err => {
+                const error = ResponseHandler(err.response)
+                                            setTimeout(() => {setError(error)}, 3000)
+            })
     }
 
     function searchRequest(requestState, date, pageNumber, requestsAdded) {
@@ -195,7 +198,10 @@ function Request(props) {
                 setShowLoading(false)
 
             })
-            .catch(err => setError(Response_Handler(err.response)))
+            .catch(err => {
+                const error = ResponseHandler(err.response)
+                                            setTimeout(() => {setError(error)}, 3000)
+            })
     }
 
 

@@ -18,7 +18,7 @@ const HeaderStaff = ({ children }) => {
                 <Header size='medium' style={style}><Link to='/auth/staff' className='link'> Home <Icon size='small' name='home' /></Link></Header>
                 <Header size='medium' style={style}><Link to={{ pathname: '/auth/staff/material' }} className='link'>Material <Icon size='small' name='microchip' /></Link></Header>
                 <Header size='medium' style={style}><Link to='/auth/staff/request' className='link'>Request <Icon size='small' name='clipboard list' /></Link></Header>
-                <Header size='medium' style={style}><Link to='/' className='link'>Logout</Link></Header>
+                <Header size='medium' style={style}><Link to='/' className='link'  onClick={()=>localStorage.removeItem('token')}>Logout<Icon size='small' name='sign out alternate'/></Link></Header>
                 <Image src={SigemadiLogo} style={{width:'8%', height:'8%'}} floated='right' />
                 <Image src={IselAdeetcLogo} size='small' floated='left' />
             </div>

@@ -4,7 +4,7 @@ import axios from 'axios'
 import { Card, Button, Image, Modal, Header, Input, List, Divider, Icon, Message } from 'semantic-ui-react'
 import { requestUrl, materialRequestUrl, reportMaterialUrl, reportSubmissionUrl } from '../Utils/Links'
 import { SemanticToastContainer, toast } from 'react-semantic-toasts';
-import Response_Handler from '../ResponseHandler'
+import ResponseHandler from '../ResponseHandler'
 
 
 const MIN = '1'
@@ -55,7 +55,10 @@ function Request_Details(props) {
                         }),
                         [])
                 )
-            }).catch(err => setError(Response_Handler(err.response)))
+            }).catch(err => {
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
+            })
     }
 
     function onSubmit() {
@@ -91,12 +94,13 @@ function Request_Details(props) {
 
         httpsAxios.patch(requestUrl.replace(':id', request.id), {})
             .then(resp => {
-                Response_Handler(resp)
+                ResponseHandler(resp)
                 setTimeout(() => getRequestInfo(request.id), 3000)
             })
             .catch(err => {
-                Response_Handler(err.response)
                 setDisableButton(false)
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
             })
         setModalTermination(false)
     }
@@ -109,7 +113,7 @@ function Request_Details(props) {
             setTimeout(() => {
                 httpsAxios.delete(materialRequestUrl.replace(':reqId', request.id).replace(':id', id), { data: { 'quantity': material.quantity } })
                     .then(resp => {
-                        Response_Handler(resp)
+                        ResponseHandler(resp)
                         if (idx + 1 === materialsRemoved.length) {
                             setTimeout(() => {
                                 getRequestInfo(request.id)
@@ -119,8 +123,9 @@ function Request_Details(props) {
                         }
                     })
                     .catch(err => {
-                        Response_Handler(err.response)
                         setDisableButton(false)
+                        const error = ResponseHandler(err.response)
+                        setTimeout(() => { setError(error) }, 3000)
                     })
             }, 1000)
 
@@ -163,20 +168,22 @@ function Request_Details(props) {
             .then(resp => {
                 httpsAxios.post(reportMaterialUrl.replace(':id', id), { "description": description, "user": user.id })
                     .then(resp => {
-                        Response_Handler(resp)
+                        ResponseHandler(resp)
                         setTimeout(() => {
                             getRequestInfo(request.id)
                             setDisableButton(false)
                         }, 3000)
                     })
                     .catch(err => {
-                        Response_Handler(err.response)
+                        const error = ResponseHandler(err.response)
+                        setTimeout(() => { setError(error) }, 3000)
                     })
             }).catch(err => {
                 setDisableButton(false)
                 confirmButton.disabled = false
                 cancelButton.disabled = false
-                Response_Handler(err.response)
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
             })
     }
 
@@ -191,9 +198,10 @@ function Request_Details(props) {
             .then(resp => {
                 getRequestInfo(request.id)
             }).catch(err => {
-                Response_Handler(err.response)
                 confirmButton.disabled = false
                 cancelButton.disabled = false
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
             })
     }
 
@@ -253,7 +261,7 @@ function Request_Details(props) {
     function buildMaterialInfo() {
         return materialsRemoved.map(material => {
 
-            if (material.id.split('-')[0]==0) {
+            if (material.id.split('-')[0] == 0) {
                 return <List.Item key={material.id}>
                     <List.Content floated='left'>
                         <Header>{material.name}</Header>

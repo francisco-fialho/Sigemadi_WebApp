@@ -9,30 +9,30 @@ function Roles(props) {
 
     const roles = [{
         name: 'administrator',
-        value: <Header size='medium' key='admin'><Link to='/auth/admin' onClick={() => selectRole('administrator')}>Administrator</Link></Header>
+        value: <Header size='medium' key='admin'><Link to='/auth/admin' onClick={() => selectRole('administrator','/auth/admin')}>Administrator</Link></Header>
     },
     {
-        name: 'lab_responsible',
-        value: <Header size='medium' key='resp'><Link to='/auth/labmanager' onClick={() => selectRole('lab_responsible')}>Laboratory Responsible</Link></Header>
+        name: 'lab_responsible',                                                                    //mudei para labmanager
+        value: <Header size='medium' key='resp'><Link to='/auth/labmanager' onClick={() => selectRole('lab_responsible','/auth/labmanager')}>Laboratory Responsible</Link></Header>
     },
     {
         name: 'teacher',
-        value: <Header size='medium' key='doc'><Link to='/auth/teacher' onClick={() => selectRole('teacher')}>Teacher</Link></Header>
+        value: <Header size='medium' key='doc'><Link to='/auth/teacher' onClick={() => selectRole('teacher','/auth/teacher')}>Teacher</Link></Header>
     },
     {
         name: 'technician',
-        value: <Header size='medium' key='tecn'><Link to='/auth/tech' onClick={() => selectRole('technician')}>Technician</Link></Header>
+        value: <Header size='medium' key='tecn'><Link to='/auth/tech' onClick={() => selectRole('technician','/auth/tech')}>Technician</Link></Header>
     },
     {
         name: 'staff',
-        value: (<Header size='medium' key='func'><Link to='/auth/staff' onClick={() => selectRole('staff')}>Staff</Link></Header>)
+        value: (<Header size='medium' key='func'><Link to='/auth/staff' onClick={() => selectRole('staff','/auth/staff')}>Staff</Link></Header>)
     },
     ]
 
     useEffect(() => {
         const userInfo = JSON.parse(localStorage.getItem('userinfo'))
         let availableRoles = []
-        userInfo.roles.map(role => role.name != 'student' ? (availableRoles.push(roles.find(r => r.name === role).value)) : null)
+        userInfo.roles.map(role => role.name != 'student' ? (availableRoles.push(roles.find(r => r.name === role.name).value)) : null)
         // if (availableRoles.length == 0) {
         //     toast({
         //         type: 'error',
@@ -46,9 +46,12 @@ function Roles(props) {
         setUserRoles(availableRoles)
     }, [])
 
-    function selectRole(name) {
+    function selectRole(name,route) {
         const user = JSON.parse(localStorage.getItem('userinfo'))
-        user.selectedRole = name
+        user.selectedRole = {
+            name:name,
+            homeRoute:route
+        }
         localStorage.removeItem('userinfo')
         localStorage.setItem('userinfo', JSON.stringify(user))
     }

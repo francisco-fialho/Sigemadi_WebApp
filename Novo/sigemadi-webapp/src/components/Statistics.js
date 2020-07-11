@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,} from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, } from 'recharts';
 import { Header, Divider, Button, Statistic } from 'semantic-ui-react'
 import ResponseHandler from './ResponseHandler'
 import {
@@ -54,6 +54,7 @@ function Statistics() {
     const [yearTo, setYearTo] = useState('')
     const httpsAxios = axios.create({ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
 
+    const [error, setError] = useState(null)
 
 
     useEffect(() => {
@@ -74,7 +75,10 @@ function Statistics() {
         httpsAxios.get(typesUrl)
             .then(resp => {
                 setTypes(resp.data.types)
-            }).catch(err => ResponseHandler(err.response))
+            }).catch(err => {
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
+            })
     }
 
     function getTopTenMostUsedMaterialTypes() {
@@ -82,7 +86,10 @@ function Statistics() {
             .then(resp => {
                 setTopTenUsedMaterialTypes(resp.data.data)
             })
-            .catch(err => ResponseHandler(err.response))
+            .catch(err => {
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
+            })
     }
 
     function getTopTenMostUsedMaterial() {
@@ -90,7 +97,10 @@ function Statistics() {
             .then(resp => {
                 setTopTenUsedMaterial(resp.data.data)
             })
-            .catch(err => ResponseHandler(err.response))
+            .catch(err => {
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
+            })
     }
 
     function getDamagePerType() {
@@ -98,7 +108,10 @@ function Statistics() {
             .then(resp => {
                 setdamagePerType(resp.data.data)
             })
-            .catch(err => ResponseHandler(err.response))
+            .catch(err => {
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
+            })
     }
 
     function getDamagedMaterial() {
@@ -108,7 +121,10 @@ function Statistics() {
             .then(resp => {
                 setdamagedMaterial(resp.data.data)
             })
-            .catch(err => ResponseHandler(err.response))
+            .catch(err => {
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
+            })
     }
 
     function getAverageTimeToRepair() {
@@ -116,7 +132,10 @@ function Statistics() {
             .then(resp => {
                 setAverageTimeToRepair(resp.data.average)
             })
-            .catch(err => ResponseHandler(err.response))
+            .catch(err => {
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
+            })
     }
 
     function getnumberOfRequestedHoursPerType() {
@@ -124,7 +143,10 @@ function Statistics() {
             .then(resp => {
                 setNumberOfRequestedHoursPerType(resp.data.data)
             })
-            .catch(err => ResponseHandler(err.response))
+            .catch(err => {
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
+            })
     }
 
     function getnumberOfRequestedHoursPerMaterial() {
@@ -134,7 +156,10 @@ function Statistics() {
             .then(resp => {
                 setNumberOfRequestedHoursPerMaterial(resp.data.data)
             })
-            .catch(err => ResponseHandler(err.response))
+            .catch(err => {
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
+            })
     }
 
     function getRequestsPerTypeByDay() {
@@ -154,7 +179,10 @@ function Statistics() {
             .then(resp => {
                 setRequestsPerTypeByDay(resp.data.data)
             })
-            .catch(err => ResponseHandler(err.response))
+            .catch(err => {
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
+            })
     }
 
     function getRequestsPerTypeByMonth() {
@@ -174,7 +202,10 @@ function Statistics() {
             .then(resp => {
                 setRequestsPerTypeByMonth(resp.data.data)
             })
-            .catch(err => ResponseHandler(err.response))
+            .catch(err => {
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
+            })
     }
 
     function getRequestsPerTypeByYear() {
@@ -194,204 +225,208 @@ function Statistics() {
             .then(resp => {
                 setRequestsPerTypeByYear(resp.data.data)
             })
-            .catch(err => ResponseHandler(err.response))
+            .catch(err => {
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
+            })
     }
 
     return (
-        <div >
-            <SemanticToastContainer />
+        error ? error :
+            <div >
+                <SemanticToastContainer />
 
-            <Header>Statistics</Header>
-            <Divider style={{ marginBottom: '5%' }} />
-
-
-            <div>
-                <Button style={{ float: 'right' }} icon='refresh' circular basic onClick={getAverageTimeToRepair}></Button>
-                <Header size='small'>Average Time to Repair</Header>
-                <Statistic>
-                    <Statistic.Value>{averageTimeToRepair}</Statistic.Value>
-                    <Statistic.Label>Minutes</Statistic.Label>
-                </Statistic>
-            </div>
-
-            <div style={{ marginTop: '5%' }}>
-                <Button style={{ float: 'right' }} icon='refresh' circular basic onClick={getTopTenMostUsedMaterialTypes}></Button>
-                <Header size='small'>Top Ten Most Used Material Types</Header>
-                <BarChart
-                    width={700}
-                    height={300}
-                    style={{ marginLeft: 'auto',marginRight: 'auto'}}
-                    data={topTenUsedMaterialTypes}
-                >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="type_name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="nr_times" fill="#c46b5e" />
-                </BarChart>
-            </div>
+                <Header>Statistics</Header>
+                <Divider style={{ marginBottom: '5%' }} />
 
 
-            <div style={{ marginTop: '5%' }}>
-                <Button style={{ float: 'right' }} icon='refresh' circular basic onClick={getTopTenMostUsedMaterial}></Button>
-                <Header size='small'>Top Ten Most Used Material</Header>
-                <BarChart
-                    width={700}
-                    height={300}
-                    style={{ marginLeft: 'auto',marginRight: 'auto'}}
-                    data={topTenUsedMaterial}
-                >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="material_name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="nr_times" fill="#c46b5e" />
-                </BarChart>
-            </div>
+                <div>
+                    <Button style={{ float: 'right' }} icon='refresh' circular basic onClick={getAverageTimeToRepair}></Button>
+                    <Header size='small'>Average Time to Repair</Header>
+                    <Statistic>
+                        <Statistic.Value>{averageTimeToRepair}</Statistic.Value>
+                        <Statistic.Label>Minutes</Statistic.Label>
+                    </Statistic>
+                </div>
 
-            <div style={{ marginTop: '6.8%' }}>
-                <Button style={{ float: 'right' }} icon='refresh' circular basic onClick={getDamagePerType}></Button>
-                <Header size='small'>Damages Per Type</Header>
-                <BarChart
-                    width={700}
-                    height={300}
-                    style={{ marginLeft: 'auto',marginRight: 'auto'}}
-                    data={damagePerType}
-                >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="type_name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="nr_damages" fill="#c46b5e" />
-                </BarChart>
-            </div>
+                <div style={{ marginTop: '5%' }}>
+                    <Button style={{ float: 'right' }} icon='refresh' circular basic onClick={getTopTenMostUsedMaterialTypes}></Button>
+                    <Header size='small'>Top Ten Most Used Material Types</Header>
+                    <BarChart
+                        width={700}
+                        height={300}
+                        style={{ marginLeft: 'auto', marginRight: 'auto' }}
+                        data={topTenUsedMaterialTypes}
+                    >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="type_name" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Bar dataKey="nr_times" fill="#c46b5e" />
+                    </BarChart>
+                </div>
 
-            <div style={{ marginTop: '5%' }}>
-                <Button style={{ float: 'right' }} icon='refresh' circular basic onClick={getDamagedMaterial}></Button>
-                <Header size='small'>Damaged Material</Header>
-                <Filter types={types} value={damageType} changeFilter={(value) => { setDamageType(value.id) }} />
-                <BarChart
-                    width={700}
-                    height={300}
-                    style={{ marginLeft: 'auto',marginRight: 'auto'}}
-                    data={damagedMaterial}
-                >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="material_name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="nr_damages" fill="#c46b5e" />
-                </BarChart>
-            </div>
 
-            <div style={{ marginTop: '6.8%' }}>
-                <Button style={{ float: 'right' }} icon='refresh' circular basic onClick={getnumberOfRequestedHoursPerType}></Button>
-                <Header size='small'>Number of Requested Hours Per Type</Header>
-                <BarChart
-                    width={700}
-                    height={300}
-                    style={{ marginLeft: 'auto',marginRight: 'auto'}}
-                    data={numberOfRequestedHoursPerType}
-                >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="type_name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="hours" fill="#c46b5e" />
-                </BarChart>
-            </div>
+                <div style={{ marginTop: '5%' }}>
+                    <Button style={{ float: 'right' }} icon='refresh' circular basic onClick={getTopTenMostUsedMaterial}></Button>
+                    <Header size='small'>Top Ten Most Used Material</Header>
+                    <BarChart
+                        width={700}
+                        height={300}
+                        style={{ marginLeft: 'auto', marginRight: 'auto' }}
+                        data={topTenUsedMaterial}
+                    >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="material_name" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Bar dataKey="nr_times" fill="#c46b5e" />
+                    </BarChart>
+                </div>
 
-            <div style={{ marginTop: '5%' }}>
-                <Button style={{ float: 'right' }} icon='refresh' circular basic onClick={getnumberOfRequestedHoursPerMaterial}></Button>
-                <Header size='small'>Number of Requested Hours Per Material</Header>
-                <Filter types={types} value={requestedType} changeFilter={(value) => { setRequestedType(value.id) }} />
-                <BarChart
-                    width={700}
-                    height={300}
-                    style={{ marginLeft: 'auto',marginRight: 'auto'}}
-                    data={numberOfRequestedHoursPerMaterial}
-                >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="material_name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="hours" fill="#c46b5e" />
-                </BarChart>
-            </div>
+                <div style={{ marginTop: '6.8%' }}>
+                    <Button style={{ float: 'right' }} icon='refresh' circular basic onClick={getDamagePerType}></Button>
+                    <Header size='small'>Damages Per Type</Header>
+                    <BarChart
+                        width={700}
+                        height={300}
+                        style={{ marginLeft: 'auto', marginRight: 'auto' }}
+                        data={damagePerType}
+                    >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="type_name" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Bar dataKey="nr_damages" fill="#c46b5e" />
+                    </BarChart>
+                </div>
 
-            <div style={{ marginTop: '5%' }}>
-                <Button style={{ float: 'right' }} icon='refresh' circular basic onClick={getRequestsPerTypeByDay}></Button>
-                <Header size='small'>Requests Per Type By Day</Header>
-                <Button content='Reset' floated='right' onClick={() => { setDayTo(''); setDayFrom(''); setRequestedTypeByDay('all') }} />
-                <Filter types={types} value={requestedTypeByDay} changeFilter={(value) => { setRequestedTypeByDay(value.id) }} />
+                <div style={{ marginTop: '5%' }}>
+                    <Button style={{ float: 'right' }} icon='refresh' circular basic onClick={getDamagedMaterial}></Button>
+                    <Header size='small'>Damaged Material</Header>
+                    <Filter types={types} value={damageType} changeFilter={(value) => { setDamageType(value.id) }} />
+                    <BarChart
+                        width={700}
+                        height={300}
+                        style={{ marginLeft: 'auto', marginRight: 'auto' }}
+                        data={damagedMaterial}
+                    >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="material_name" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Bar dataKey="nr_damages" fill="#c46b5e" />
+                    </BarChart>
+                </div>
+
+                <div style={{ marginTop: '6.8%' }}>
+                    <Button style={{ float: 'right' }} icon='refresh' circular basic onClick={getnumberOfRequestedHoursPerType}></Button>
+                    <Header size='small'>Number of Requested Hours Per Type</Header>
+                    <BarChart
+                        width={700}
+                        height={300}
+                        style={{ marginLeft: 'auto', marginRight: 'auto' }}
+                        data={numberOfRequestedHoursPerType}
+                    >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="type_name" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Bar dataKey="hours" fill="#c46b5e" />
+                    </BarChart>
+                </div>
+
+                <div style={{ marginTop: '5%' }}>
+                    <Button style={{ float: 'right' }} icon='refresh' circular basic onClick={getnumberOfRequestedHoursPerMaterial}></Button>
+                    <Header size='small'>Number of Requested Hours Per Material</Header>
+                    <Filter types={types} value={requestedType} changeFilter={(value) => { setRequestedType(value.id) }} />
+                    <BarChart
+                        width={700}
+                        height={300}
+                        style={{ marginLeft: 'auto', marginRight: 'auto' }}
+                        data={numberOfRequestedHoursPerMaterial}
+                    >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="material_name" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Bar dataKey="hours" fill="#c46b5e" />
+                    </BarChart>
+                </div>
+
+                <div style={{ marginTop: '5%' }}>
+                    <Button style={{ float: 'right' }} icon='refresh' circular basic onClick={getRequestsPerTypeByDay}></Button>
+                    <Header size='small'>Requests Per Type By Day</Header>
+                    <Button content='Reset' floated='right' onClick={() => { setDayTo(''); setDayFrom(''); setRequestedTypeByDay('all') }} />
+                    <Filter types={types} value={requestedTypeByDay} changeFilter={(value) => { setRequestedTypeByDay(value.id) }} />
                 From: <Date setDay={(value) => setDayFrom(value)} date={dayFrom}></Date>
                 To: <Date setDay={(value) => setDayTo(value)} date={dayTo}></Date>
-                <BarChart
-                    width={700}
-                    height={300}
-                    style={{ marginLeft: 'auto',marginRight: 'auto'}}
-                    data={requestsPerTypeByDay}
-                >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="material_name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="nr_requests" fill="#c46b5e" />
-                </BarChart>
-            </div>
+                    <BarChart
+                        width={700}
+                        height={300}
+                        style={{ marginLeft: 'auto', marginRight: 'auto' }}
+                        data={requestsPerTypeByDay}
+                    >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="material_name" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Bar dataKey="nr_requests" fill="#c46b5e" />
+                    </BarChart>
+                </div>
 
-            <div style={{ marginTop: '5%' }}>
-                <Button style={{ float: 'right' }} icon='refresh' circular basic onClick={getRequestsPerTypeByMonth}></Button>
-                <Header size='small'>Requests Per Type By Month</Header>
-                <Button content='Reset' floated='right' onClick={() => { setMonthTo(''); setMonthFrom(''); setRequestedTypeByMonth('all') }} />
-                <Filter types={types} value={requestedTypeByMonth} changeFilter={(value) => { setRequestedTypeByMonth(value.id) }} />
+                <div style={{ marginTop: '5%' }}>
+                    <Button style={{ float: 'right' }} icon='refresh' circular basic onClick={getRequestsPerTypeByMonth}></Button>
+                    <Header size='small'>Requests Per Type By Month</Header>
+                    <Button content='Reset' floated='right' onClick={() => { setMonthTo(''); setMonthFrom(''); setRequestedTypeByMonth('all') }} />
+                    <Filter types={types} value={requestedTypeByMonth} changeFilter={(value) => { setRequestedTypeByMonth(value.id) }} />
                 From: <MonthCalendar setMonth={(value) => setMonthFrom(value)} date={monthFrom}></MonthCalendar>
                 To: <MonthCalendar setMonth={(value) => setMonthTo(value)} date={monthTo}></MonthCalendar>
-                <BarChart
-                    width={700}
-                    height={300}
-                    style={{ marginLeft: 'auto',marginRight: 'auto'}}
-                    data={requestsPerTypeByMonth}
-                >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="material_name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="nr_requests" fill="#c46b5e" />
-                </BarChart>
-            </div>
+                    <BarChart
+                        width={700}
+                        height={300}
+                        style={{ marginLeft: 'auto', marginRight: 'auto' }}
+                        data={requestsPerTypeByMonth}
+                    >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="material_name" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Bar dataKey="nr_requests" fill="#c46b5e" />
+                    </BarChart>
+                </div>
 
 
-            <div style={{ marginTop: '5%' }}>
-                <Button style={{ float: 'right' }} icon='refresh' circular basic onClick={getRequestsPerTypeByYear}></Button>
-                <Header size='small'>Requests Per Type By Year</Header>
-                <Button content='Reset' floated='right' onClick={() => { setYearTo(''); setYearFrom(''); setRequestedTypeByYear('all') }} />
-                <Filter types={types} value={requestedTypeByYear} changeFilter={(value) => { setRequestedTypeByYear(value.id) }} />
+                <div style={{ marginTop: '5%' }}>
+                    <Button style={{ float: 'right' }} icon='refresh' circular basic onClick={getRequestsPerTypeByYear}></Button>
+                    <Header size='small'>Requests Per Type By Year</Header>
+                    <Button content='Reset' floated='right' onClick={() => { setYearTo(''); setYearFrom(''); setRequestedTypeByYear('all') }} />
+                    <Filter types={types} value={requestedTypeByYear} changeFilter={(value) => { setRequestedTypeByYear(value.id) }} />
                 From: <YearCalendar setYear={(value) => setYearFrom(value)} date={yearFrom}></YearCalendar>
                 To: <YearCalendar setYear={(value) => setYearTo(value)} date={yearTo}></YearCalendar>
-                <BarChart
-                    width={700}
-                    height={300}
-                    style={{ marginLeft: 'auto',marginRight: 'auto'}}
-                    data={requestsPerTypeByYear}
-                >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="material_name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="nr_requests" fill="#c46b5e" />
-                </BarChart>
+                    <BarChart
+                        width={700}
+                        height={300}
+                        style={{ marginLeft: 'auto', marginRight: 'auto' }}
+                        data={requestsPerTypeByYear}
+                    >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="material_name" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Bar dataKey="nr_requests" fill="#c46b5e" />
+                    </BarChart>
+                </div>
             </div>
-        </div>
     )
 }
 

@@ -5,7 +5,7 @@ import { Header, Message, Button, Divider, Grid, Card, Icon, ButtonGroup } from 
 import FilterMaterial from './FilterMaterial'
 import { materialsUrl } from './Utils/Links'
 import { SemanticToastContainer, toast } from "react-semantic-toasts";
-import Response_Handler from './ResponseHandler'
+import ResponseHandler from './ResponseHandler'
 
 function Material(props) {
 
@@ -53,7 +53,7 @@ function Material(props) {
 
     function canReport() {
         const user = JSON.parse(localStorage.getItem('userinfo'))
-        return user.selectedRole === 'staff'
+        return user.selectedRole.name === 'staff'
     }
 
     function searchMaterial(search, pageNumber, materialAdded) {
@@ -88,7 +88,10 @@ function Material(props) {
 
                 setSearchFilters(search)
             })
-            .catch(err => setError(Response_Handler(err.response)))
+            .catch(err => {
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
+            })
     }
 
     function setFilters(filter) {

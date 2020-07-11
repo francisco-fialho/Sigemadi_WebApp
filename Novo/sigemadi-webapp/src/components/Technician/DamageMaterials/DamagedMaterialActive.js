@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import axios from 'axios'
 import { damagesUrl } from '../../Utils/Links'
 import { SemanticToastContainer } from 'react-semantic-toasts';
-import Response_Handler from '../../ResponseHandler'
+import ResponseHandler from '../../ResponseHandler'
 import DamagedMaterial from './DamagedMaterial'
 import { Message, Icon } from 'semantic-ui-react'
 
@@ -60,7 +60,10 @@ function Damaged_Material_Active(props) {
                 setMaterial(damages)
 
                 setShowLoading(false)
-            }).catch(err => setError(Response_Handler(err.response)))
+            }).catch(err => {
+                const error = ResponseHandler(err.response)
+                                            setTimeout(() => {setError(error)}, 3000)
+            })
     }
 
 

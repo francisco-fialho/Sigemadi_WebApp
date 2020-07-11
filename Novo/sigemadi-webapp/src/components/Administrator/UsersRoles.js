@@ -3,7 +3,7 @@ import Option from '../Utils/Option'
 import { Header, Input, Button, Grid, Card, Image, Divider, Message, Icon } from 'semantic-ui-react'
 import axios from 'axios'
 import { usersUrl, rolesUrl } from '../Utils/Links'
-import Response_Handler from '../ResponseHandler'
+import ResponseHandler from '../ResponseHandler'
 import { SemanticToastContainer, toast } from 'react-semantic-toasts';
 
 function Users_Roles(props) {
@@ -50,7 +50,10 @@ function Users_Roles(props) {
         httpsAxios.get(rolesUrl)
             .then(resp => {
                 setRoles(resp.data['roles'].filter(r => r !== 'student' && r !== 'staff'))
-            }).catch(err => Response_Handler(err.response))
+            }).catch(err => {
+                const error = ResponseHandler(err.response)
+                                            setTimeout(() => {setError(error)}, 3000)
+            })
 
 
         intersectionObserver.observe(scrollObserve.current)
@@ -131,7 +134,12 @@ function Users_Roles(props) {
                         search: search
                     })
 
-            }).catch(err => setError(Response_Handler(err.response)))
+            }).catch(err => {
+                const error = ResponseHandler(err.response)
+                setTimeout(() => {
+                    setError(error)
+                }, 3000)
+            })
     }
 
 
@@ -244,7 +252,7 @@ function Users_Roles(props) {
 
                         <Grid columns={6} id='users' style={style}>
                             {
-                                persons.length==0 && !showLoading ? <Message>There are no results</Message> : createUsersTable()
+                                persons.length == 0 && !showLoading ? <Message>There are no results</Message> : createUsersTable()
                             }
                             <div ref={scrollObserve}></div>
                             {

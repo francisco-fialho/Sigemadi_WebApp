@@ -3,7 +3,7 @@ import { Label, Button, Header, List, Card, Form, CardGroup, Divider, Message, I
 import { damageUrl } from '../../Utils/Links'
 import axios from 'axios'
 import { SemanticToastContainer } from 'react-semantic-toasts';
-import Response_Handler from '../../ResponseHandler'
+import ResponseHandler from '../../ResponseHandler'
 import DamagedMaterialDetails from './DamagedMaterialDetails';
 import Page404 from '../../Errors/Page404';
 
@@ -20,9 +20,12 @@ function History_Material_Details(props) {
         const id = props.match.params['id']
         httpsAxios.get(damageUrl.replace(':id', id))
             .then(resp => {
-                if(resp.data.state=='to_solve') return setError(<Page404/>)
+                if (resp.data.state == 'to_solve') return setError(<Page404 />)
                 setMaterialReport({ ...resp.data })
-            }).catch(err => setError(Response_Handler(err.response)))
+            }).catch(err => {
+                const error = ResponseHandler(err.response)
+                setTimeout(() => { setError(error) }, 3000)
+            })
     }, [])
 
     return (

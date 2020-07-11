@@ -3,7 +3,7 @@ import Filter from '../../Utils/Filter'
 import { Card, Header, ButtonGroup, Button, Input } from 'semantic-ui-react'
 import axios from 'axios'
 import { sci_areaUrl, sci_areasUrl, materialsUrl } from '../../Utils/Links'
-import Response_Handler from '../../ResponseHandler';
+import ResponseHandler from '../../ResponseHandler';
 import { SemanticToastContainer, toast } from 'react-semantic-toasts';
 
 const MAX = '10'
@@ -33,8 +33,14 @@ function New_Material(props) {
                         setSci_Areas([specific, geral])
                         setTypes(response.data['types'])
                         setType(response.data['types'][0])
-                    }).catch(err => setError(Response_Handler(err.response)))
-            }).catch(err => setError(Response_Handler(err.response)))
+                    }).catch(err => {
+                        const error = ResponseHandler(err.response)
+                                            setTimeout(() => {setError(error)}, 3000)
+                    })
+            }).catch(err => {
+                const error = ResponseHandler(err.response)
+                                            setTimeout(() => {setError(error)}, 3000)
+            })
     }, [])
 
     function onConfirm() {
@@ -52,12 +58,13 @@ function New_Material(props) {
 
         httpsAxios.post(materialsUrl, { "quantity": quantity, "type": type.id })
             .then(resp => {
-                Response_Handler(resp)
+                ResponseHandler(resp)
                 setTimeout(() => props.history.push(props.location.pathname.replace('/addmaterial', '/material')), 3000)
             })
             .catch(err => {
                 setDisableButton(false)
-                Response_Handler(err.response)
+                const error = ResponseHandler(err.response)
+                                            setTimeout(() => {setError(error)}, 3000)
             })
 
     }

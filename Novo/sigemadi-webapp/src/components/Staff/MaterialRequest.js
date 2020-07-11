@@ -5,7 +5,7 @@ import { Modal, Header, Button, ButtonGroup, Grid, Divider, Card, Message, Icon 
 import axios from 'axios'
 import { materialsUrl, materialUrl } from '../Utils/Links'
 import FilterMaterial from '../FilterMaterial';
-import Response_Handler from '../ResponseHandler'
+import ResponseHandler from '../ResponseHandler'
 import { SemanticToastContainer, toast } from 'react-semantic-toasts';
 
 
@@ -121,7 +121,10 @@ function Material_Request(props) {
                 setShowLoading(false)
                 setSearchFilters(filters)
             })
-            .catch(err => setError(Response_Handler(err.response)))
+            .catch(err => {
+                const error = ResponseHandler(err.response)
+                                            setTimeout(() => {setError(error)}, 3000)
+            })
     }
 
     async function addMaterial() {
@@ -202,7 +205,10 @@ function Material_Request(props) {
                         time: 3000,
                         size: 'mini'
                     })
-                }).catch(err => Response_Handler(err.response))
+                }).catch(err => {
+                    const error = ResponseHandler(err.response)
+                                            setTimeout(() => {setError(error)}, 3000)
+                })
             setResult(null)
 
         }
