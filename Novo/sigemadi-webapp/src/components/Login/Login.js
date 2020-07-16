@@ -5,6 +5,9 @@ import LoginContext from './LoginContext'
 import { loginUrl, userUrl,userRolesUrl } from '../Utils/Links'
 import ResponseHandler from '../ResponseHandler'
 import httpsAxios from "../../resources/HttpsAxios"
+import cert from '../../resources/bootsecurity.pem'
+import key from '../../resources/bootsecurity.key'
+import https from 'https'
 import { toast } from "react-semantic-toasts"
 import axios from "axios"
 
@@ -15,17 +18,20 @@ function Login(props) {
     function handleLogin() {
         setIsLoggedIn(checkLoggedIn())
     }
-
+    const httpsAgent = new https.Agent({
+        cert:cert,
+        rejectUnauthorized:false
+    })
     
     async function login(username, password) {
         //mudar para post
-        localStorage.clear()
+        //localStorage.clear()
 
         const resp = await axios.post(loginUrl, {},{
             auth: {
                 username: username,
                 password: password
-            }
+            },httpsAgent:httpsAgent
         }).catch(err => {
             ResponseHandler(err.response)
             return null

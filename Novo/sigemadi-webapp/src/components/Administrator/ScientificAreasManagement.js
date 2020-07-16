@@ -6,7 +6,7 @@ import { sci_areasUrl, sci_areaUrl } from '../Utils/Links'
 import ResponseHandler from '../ResponseHandler'
 import { SemanticToastContainer } from 'react-semantic-toasts';
 
-function Scientific_Areas_Management(props) {
+function Scientific_Areas_Management() {
 
 
     const [sci_areas, setSci_Areas] = useState([])

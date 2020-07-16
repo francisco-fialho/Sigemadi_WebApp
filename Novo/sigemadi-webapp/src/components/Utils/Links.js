@@ -1,4 +1,4 @@
-const BASE_URL = 'https://10.62.73.49:8443/sigemadi/api'
+const BASE_URL = 'http://10.62.73.49:8085/sigemadi/api'
 
 const loginUrl = `${BASE_URL}/login`
 

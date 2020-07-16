@@ -20,7 +20,7 @@ function Request(props) {
     const [requestType, setRequestType] = useState({ type: '', id: '' })
 
     const [showLoading, setShowLoading] = useState(false)
-    const [scrollRadio, setScollRadio] = useState(null)
+    const [scrollRadio, setScrollRadio] = useState(null)
     const [page, setPage] = useState(0)
     const [moreData, setMoreData] = useState(true)
     const [error, setError] = useState(null)
@@ -82,7 +82,7 @@ function Request(props) {
 
     const intersectionObserver = new IntersectionObserver((entries) => {
         const radio = entries[0].intersectionRatio
-        setScollRadio(radio)
+        setScrollRadio(radio)
     }, scrollOptions)
 
     useEffect(() => {

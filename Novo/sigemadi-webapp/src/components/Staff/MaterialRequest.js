@@ -15,7 +15,7 @@ function Material_Request(props) {
     const scrollObserve = useRef()
 
     const [showLoading, setShowLoading] = useState(false)
-    const [scrollRadio, setScollRadio] = useState(null)
+    const [scrollRadio, setScrollRadio] = useState(null)
     const [page, setPage] = useState(0)
     const [moreData, setMoreData] = useState(true)
     const [searchFilters, setSearchFilters] = useState(null)
@@ -50,7 +50,7 @@ function Material_Request(props) {
 
     const intersectionObserver = new IntersectionObserver((entries) => {
         const radio = entries[0].intersectionRatio
-        setScollRadio(radio)
+        setScrollRadio(radio)
     }, scrollOptions)
 
     useEffect(() => {

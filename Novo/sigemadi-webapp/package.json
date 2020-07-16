@@ -24,7 +24,7 @@
     "universal-cookie": "^4.0.3"
   },
   "scripts": {
-    "start": "set HTTPS=true SL_CRT_FILE=./src/resources/bootsecurity.crt SSL_KEY_FILE=./src/resources/bootsecurity.key && craco start",
+    "start": "craco start",
     "build": "set \"GENERATE_SOURCEMAP=false\" && craco build",
     "test": "craco test",
     "eject": "react-scripts eject"

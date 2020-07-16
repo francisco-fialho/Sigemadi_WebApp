@@ -140,7 +140,7 @@ function Define_Roles(props) {
             .then(resp => {
                 ResponseHandler(resp)
 
-                //if it is the same user as the app user, then update app user roles
+                
                 if (person.id == user.id) {
                     httpsAxios.get(userRolesUrl.replace(':id', person.id))
                         .then(resp => {
