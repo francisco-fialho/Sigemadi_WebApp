@@ -19,7 +19,7 @@ function Reservation(props) {
             })
             .catch(err => {
                 const error = ResponseHandler(err.response)
-                                            setTimeout(() => {setError(error)}, 3000)
+                setTimeout(() => { setError(error) }, 3000)
             })
     }, [])
 

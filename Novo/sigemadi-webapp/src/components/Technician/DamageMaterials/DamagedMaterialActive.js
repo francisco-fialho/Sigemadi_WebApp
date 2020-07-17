@@ -47,7 +47,7 @@ function Damaged_Material_Active(props) {
     const intersectionObserver = new IntersectionObserver((entries) => {
         const radio = entries[0].intersectionRatio
         setScrollRadio(radio)
-    },scrollOptions)
+    }, scrollOptions)
 
     function getDamages(pageNumber, damageReports) {
         httpsAxios.get(damagesUrl.replace(':flag', 'false') + `&page=${pageNumber}`)
@@ -62,7 +62,7 @@ function Damaged_Material_Active(props) {
                 setShowLoading(false)
             }).catch(err => {
                 const error = ResponseHandler(err.response)
-                                            setTimeout(() => {setError(error)}, 3000)
+                setTimeout(() => { setError(error) }, 3000)
             })
     }
 

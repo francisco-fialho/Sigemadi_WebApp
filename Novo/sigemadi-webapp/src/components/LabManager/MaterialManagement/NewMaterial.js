@@ -17,7 +17,7 @@ function New_Material(props) {
     const [sci_area, setSci_Area] = useState('')
     const [quantity, setQuantity] = useState(1)
     const [error, setError] = useState(null)
-    const [disableButton,setDisableButton] = useState(false)
+    const [disableButton, setDisableButton] = useState(false)
     const httpsAxios = axios.create({ headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } })
 
 
@@ -35,11 +35,11 @@ function New_Material(props) {
                         setType(response.data['types'][0])
                     }).catch(err => {
                         const error = ResponseHandler(err.response)
-                                            setTimeout(() => {setError(error)}, 3000)
+                        setTimeout(() => { setError(error) }, 3000)
                     })
             }).catch(err => {
                 const error = ResponseHandler(err.response)
-                                            setTimeout(() => {setError(error)}, 3000)
+                setTimeout(() => { setError(error) }, 3000)
             })
     }, [])
 
@@ -53,7 +53,7 @@ function New_Material(props) {
                 size: 'mini'
             })
         }
-        
+
         setDisableButton(true)
 
         httpsAxios.post(materialsUrl, { "quantity": quantity, "type": type.id })
@@ -64,7 +64,7 @@ function New_Material(props) {
             .catch(err => {
                 setDisableButton(false)
                 const error = ResponseHandler(err.response)
-                                            setTimeout(() => {setError(error)}, 3000)
+                setTimeout(() => { setError(error) }, 3000)
             })
 
     }

@@ -43,7 +43,6 @@ const Handler = (response) => {
             return <Page400 />
         }
 
-        //VERIFICAR SE FOR 401 QUER DIZER QUE O TEMPO DO JWT CHEGOU AO FIM 
         if (response.status == 401) {
             localStorage.clear()
             return <Redirect to='/login' />

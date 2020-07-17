@@ -113,16 +113,18 @@ function Request(props) {
                 let old = resp.data['older'] == undefined ? false : resp.data['older'].length > 0
                 let curr = resp.data['current'] == undefined ? false : true
 
-                if (((requestState === 'all' && !old && !curr) || (requestState === 'true' && !curr) || (requestState === 'false' && !old)) && requestsAdded.length === 0) {
+                if (((requestState == 'all' && !old && !curr) || (requestState == 'true' && !curr) || (requestState == 'false' && !old))) {
                     setShowLoading(false)
                     setMoreData(false)
-                    return toast({
-                        type: 'warning',
-                        title: 'Something went wrong',
-                        time: 2000,
-                        size: 'mini',
-                        description: 'There are no results for the specified parameters'
-                    })
+                    if (requestsAdded.length == 0)
+                        return toast({
+                            type: 'warning',
+                            title: 'Something went wrong',
+                            time: 2000,
+                            size: 'mini',
+                            description: 'There are no results for the specified parameters'
+                        })
+                    return
                 }
 
                 if (requestState === 'all') {
@@ -150,7 +152,7 @@ function Request(props) {
             })
             .catch(err => {
                 const error = ResponseHandler(err.response)
-                                            setTimeout(() => {setError(error)}, 3000)
+                setTimeout(() => { setError(error) }, 3000)
             })
     }
 
@@ -178,7 +180,6 @@ function Request(props) {
             .then(resp => {
                 const data = resp.data['requests']
                 if (data.length == 0 && requestsAdded.length == 0) {
-                    //setRequests(data)
                     setShowLoading(false)
                     setMoreData(false)
                     return toast({
@@ -200,7 +201,7 @@ function Request(props) {
             })
             .catch(err => {
                 const error = ResponseHandler(err.response)
-                                            setTimeout(() => {setError(error)}, 3000)
+                setTimeout(() => { setError(error) }, 3000)
             })
     }
 
@@ -319,7 +320,7 @@ function Request(props) {
                         <div style={{ display: 'block' }}>
                             <Grid columns={4} id='requests' style={style}>
                                 {
-                                    requests.length==0 && !showLoading? <Message>There are no results</Message> : buildRequestList()
+                                    requests.length == 0 && !showLoading ? <Message>There are no results</Message> : buildRequestList()
                                 }
                                 <div ref={scrollObserve}></div>
                                 {

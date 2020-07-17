@@ -1,10 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Button, Header, Image } from 'semantic-ui-react'
+import { Header } from 'semantic-ui-react'
 import Desintegratin_html from '../../assets/Desintegrating_html.png'
 
 const Page404 = ({ home }) => {
-    //MUDAR A LIGAÇÃO OU SABER COMO MANDAR PARA A HOME E ELA SABER SE É A HOME DE RESP/ADMIN/FUNC ETC
 
     const user = localStorage.getItem('userinfo')
 

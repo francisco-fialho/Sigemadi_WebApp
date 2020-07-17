@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Header, Divider, Message, Icon } from 'semantic-ui-react'
-import { SemanticToastContainer, toast } from 'react-semantic-toasts'
+import { SemanticToastContainer } from 'react-semantic-toasts'
 
 function Roles(props) {
 
@@ -12,7 +12,7 @@ function Roles(props) {
         value: <Header size='medium' key='admin'><Link to='/auth/admin' onClick={() => selectRole('administrator','/auth/admin')}>Administrator</Link></Header>
     },
     {
-        name: 'lab_responsible',                                                                    //mudei para labmanager
+        name: 'lab_responsible',
         value: <Header size='medium' key='resp'><Link to='/auth/labmanager' onClick={() => selectRole('lab_responsible','/auth/labmanager')}>Laboratory Responsible</Link></Header>
     },
     {
@@ -33,16 +33,6 @@ function Roles(props) {
         const userInfo = JSON.parse(localStorage.getItem('userinfo'))
         let availableRoles = []
         userInfo.roles.map(role => role.name != 'student' ? (availableRoles.push(roles.find(r => r.name === role.name).value)) : null)
-        // if (availableRoles.length == 0) {
-        //     toast({
-        //         type: 'error',
-        //         title: 'Something Went Wrong',
-        //         time: 2000,
-        //         size: 'mini',
-        //         description: 'Student users can´t login!'
-        //     })
-        //     setTimeout(() => props.history.push(''), 3000)
-        // }
         setUserRoles(availableRoles)
     }, [])
 

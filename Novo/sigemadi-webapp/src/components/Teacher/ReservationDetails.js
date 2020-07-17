@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import ProfilePic from '../../assets/molly.png'
 import { Card, Button, Header, Image, Divider, Message, Icon } from 'semantic-ui-react'
 import { reservationUrl } from '../Utils/Links'
 import axios from 'axios'

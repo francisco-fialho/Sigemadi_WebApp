@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
 import QrReader from 'react-qr-reader'
-import Cookies from 'universal-cookie';
 import { Modal, Header, Button, ButtonGroup, Grid, Divider, Card, Message, Icon } from 'semantic-ui-react';
 import axios from 'axios'
 import { materialsUrl, materialUrl } from '../Utils/Links'
@@ -73,7 +72,6 @@ function Material_Request(props) {
                     }),
                     []
                 ))
-                // material.map(m => selectCheckBox(m.id))
                 setSelectedMaterials(material)
             }
         }
@@ -123,16 +121,13 @@ function Material_Request(props) {
             })
             .catch(err => {
                 const error = ResponseHandler(err.response)
-                                            setTimeout(() => {setError(error)}, 3000)
+                setTimeout(() => { setError(error) }, 3000)
             })
     }
 
     async function addMaterial() {
 
         let selectedAvailableMaterial = selectedMaterials.filter(m => materials.find(material => material.id == m.id) != undefined)
-
-        //CASO SEJA SELECIONADO UM MATERIAL NUMA PÁGINA MAIS A FRENTE QUE NAO TENHA SIDO CARREGADA TENHO DE VER
-        // SE ESTA DISPONIVEL PARA O ADICIONAR, PARA FAZER O MINIMO DE PEDIDOS POSSIVEL
 
         let checkMaterial = selectedMaterials.filter(m => materials.find(material => material.id == m.id) == undefined)
 
@@ -207,7 +202,7 @@ function Material_Request(props) {
                     })
                 }).catch(err => {
                     const error = ResponseHandler(err.response)
-                                            setTimeout(() => {setError(error)}, 3000)
+                    setTimeout(() => { setError(error) }, 3000)
                 })
             setResult(null)
 
@@ -323,7 +318,7 @@ function Material_Request(props) {
                         <div>
                             <Grid columns={3} id='material' style={style} >
                                 {
-                                    materials.length==0 && !showLoading ? <Message>There are no results</Message> : createCheckBoxes()
+                                    materials.length == 0 && !showLoading ? <Message>There are no results</Message> : createCheckBoxes()
                                 }
                                 <div ref={scrollObserve}></div>
                                 {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import { Label, Header, List, Card, Form, Button, Divider, Message, Icon } from 'semantic-ui-react'
+import { Label, Header, List, Card, Button, Divider, Message, Icon } from 'semantic-ui-react'
 import ResponseHandler from './ResponseHandler'
 import { SemanticToastContainer } from 'react-semantic-toasts';
 import { materialUrl } from './Utils/Links'
@@ -155,9 +155,7 @@ function Material_Details(props) {
                                     </Card.Header>
                                         <Divider />
                                         <Card.Description>
-                                            {
-                                                //METER OS LINKS
-                                            }
+
                                         </Card.Description>
 
                                     </Card.Content>

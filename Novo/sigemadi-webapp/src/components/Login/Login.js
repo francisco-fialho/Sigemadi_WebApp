@@ -1,13 +1,8 @@
 import React, { useState } from "react"
 import { Switch, Route, Redirect } from 'react-router-dom'
 import LoginPage from './LoginPage'
-import LoginContext from './LoginContext'
 import { loginUrl, userUrl,userRolesUrl } from '../Utils/Links'
 import ResponseHandler from '../ResponseHandler'
-import httpsAxios from "../../resources/HttpsAxios"
-import cert from '../../resources/bootsecurity.pem'
-import key from '../../resources/bootsecurity.key'
-import https from 'https'
 import { toast } from "react-semantic-toasts"
 import axios from "axios"
 
@@ -18,20 +13,15 @@ function Login(props) {
     function handleLogin() {
         setIsLoggedIn(checkLoggedIn())
     }
-    const httpsAgent = new https.Agent({
-        cert:cert,
-        rejectUnauthorized:false
-    })
     
     async function login(username, password) {
-        //mudar para post
-        //localStorage.clear()
+        localStorage.clear()
 
         const resp = await axios.post(loginUrl, {},{
             auth: {
                 username: username,
                 password: password
-            },httpsAgent:httpsAgent
+            }
         }).catch(err => {
             ResponseHandler(err.response)
             return null
@@ -83,9 +73,6 @@ function Login(props) {
         return localStorage.getItem('token') != null
     }
 
-    function getToken() {
-        return localStorage.getItem('token')
-    }
 
     return (
         <Switch>
@@ -96,8 +83,7 @@ function Login(props) {
             <Route>
                 {!isLoggedIn ?
                     <Redirect to="/login" /> :
-                    //pode dar problemas no getToken
-                    <LoginContext.Provider value={{ token: getToken(), login: login, checkLoggedIn: checkLoggedIn }}>{props.children}</LoginContext.Provider>
+                    props.children
                 }
             </Route>
         </Switch>

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Header, Button, List, Divider } from 'semantic-ui-react'
 import axios from 'axios'
-import Cookies from 'universal-cookie'
 import { sci_areaUrl, typeSci_Area_By_IdUrl } from '../../Utils/Links'
 import ResponseHandler from '../../ResponseHandler';
 import { SemanticToastContainer } from 'react-semantic-toasts';
