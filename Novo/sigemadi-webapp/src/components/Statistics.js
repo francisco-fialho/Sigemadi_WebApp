@@ -307,7 +307,7 @@ function Statistics() {
                 <div style={{ marginTop: '5%' }}>
                     <Button style={{ float: 'right' }} icon='refresh' circular basic onClick={getDamagedMaterial}></Button>
                     <Header size='small'>Damaged Material</Header>
-                    <Filter types={types} value={damageType} changeFilter={(value) => { setDamageType(value.id) }} />
+                    <Filter types={types} value={damageType} changeFilter={(value) => { setDamageType(value.id) }} optionAll/>
                     <BarChart
                         width={700}
                         height={300}
@@ -344,7 +344,7 @@ function Statistics() {
                 <div style={{ marginTop: '5%' }}>
                     <Button style={{ float: 'right' }} icon='refresh' circular basic onClick={getnumberOfRequestedHoursPerMaterial}></Button>
                     <Header size='small'>Number of Requested Hours Per Material</Header>
-                    <Filter types={types} value={requestedType} changeFilter={(value) => { setRequestedType(value.id) }} />
+                    <Filter types={types} value={requestedType} changeFilter={(value) => { setRequestedType(value.id) }} optionAll/>
                     <BarChart
                         width={700}
                         height={300}
@@ -364,7 +364,7 @@ function Statistics() {
                     <Button style={{ float: 'right' }} icon='refresh' circular basic onClick={getRequestsPerTypeByDay}></Button>
                     <Header size='small'>Requests Per Type By Day</Header>
                     <Button content='Reset' floated='right' onClick={() => { setDayTo(''); setDayFrom(''); setRequestedTypeByDay('all') }} />
-                    <Filter types={types} value={requestedTypeByDay} changeFilter={(value) => { setRequestedTypeByDay(value.id) }} />
+                    <Filter types={types} value={requestedTypeByDay} changeFilter={(value) => { setRequestedTypeByDay(value.id) }} optionAll/>
                 From: <Date setDay={(value) => setDayFrom(value)} date={dayFrom}></Date>
                 To: <Date setDay={(value) => setDayTo(value)} date={dayTo}></Date>
                     <BarChart
@@ -385,7 +385,7 @@ function Statistics() {
                 <div style={{ marginTop: '5%' }}>
                     <Button style={{ float: 'right' }} icon='refresh' circular basic onClick={getRequestsPerTypeByMonth}></Button>
                     <Header size='small'>Requests Per Type By Month</Header>
-                    <Button content='Reset' floated='right' onClick={() => { setMonthTo(''); setMonthFrom(''); setRequestedTypeByMonth('all') }} />
+                    <Button content='Reset' floated='right' onClick={() => { setMonthTo(''); setMonthFrom(''); setRequestedTypeByMonth('all') }} optionAll/>
                     <Filter types={types} value={requestedTypeByMonth} changeFilter={(value) => { setRequestedTypeByMonth(value.id) }} />
                 From: <MonthCalendar setMonth={(value) => setMonthFrom(value)} date={monthFrom}></MonthCalendar>
                 To: <MonthCalendar setMonth={(value) => setMonthTo(value)} date={monthTo}></MonthCalendar>
@@ -409,7 +409,7 @@ function Statistics() {
                     <Button style={{ float: 'right' }} icon='refresh' circular basic onClick={getRequestsPerTypeByYear}></Button>
                     <Header size='small'>Requests Per Type By Year</Header>
                     <Button content='Reset' floated='right' onClick={() => { setYearTo(''); setYearFrom(''); setRequestedTypeByYear('all') }} />
-                    <Filter types={types} value={requestedTypeByYear} changeFilter={(value) => { setRequestedTypeByYear(value.id) }} />
+                    <Filter types={types} value={requestedTypeByYear} changeFilter={(value) => { setRequestedTypeByYear(value.id) }} optionAll/>
                 From: <YearCalendar setYear={(value) => setYearFrom(value)} date={yearFrom}></YearCalendar>
                 To: <YearCalendar setYear={(value) => setYearTo(value)} date={yearTo}></YearCalendar>
                     <BarChart

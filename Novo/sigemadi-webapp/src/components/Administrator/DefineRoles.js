@@ -139,23 +139,7 @@ function Define_Roles(props) {
         httpsAxios.put(userRolesUrl.replace(':id', person.id), { 'roles': checked })
             .then(resp => {
                 ResponseHandler(resp)
-
-                
-                if (person.id == user.id) {
-                    httpsAxios.get(userRolesUrl.replace(':id', person.id))
-                        .then(resp => {
-                            user.roles = resp.data['roles']
-                            localStorage.setItem('userinfo', JSON.stringify(user))
-                            setTimeout(() => props.history.push(props.location.pathname.replace(`/${person.id}`, '')), 3000)
-                        }).catch(err => {
-                            const error = ResponseHandler(err.response)
-                            setTimeout(() => {
-                                setError(error)
-                            }, 3000)
-                        })
-                }
-                else
-                    setTimeout(() => props.history.push(props.location.pathname.replace(`/${person.id}`, '')), 3000)
+                setTimeout(() => props.history.push(props.location.pathname.replace(`/${person.id}`, '')), 3000)
             }).catch(err => {
                 setDisableButton(false)
                 const error = ResponseHandler(err.response)

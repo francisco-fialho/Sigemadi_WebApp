@@ -140,7 +140,13 @@ function Checkout_Request(props) {
                 if (parseInt(quantity) < parseInt(MIN)) quantity = MIN
                 if (parseInt(quantity) > parseInt(MAX)) quantity = MAX
                 else if (parseInt(quantity) > parseInt(material.available_quantity)) quantity = material.available_quantity
-
+                toast({
+                    type: 'warning',
+                    title: 'Quantity updated',
+                    time: 2000,
+                    size: 'mini',
+                    description: `Quantity for material ${material.name} is ${quantity}`
+                })
                 materials.push({ 'material_id': material.id, 'quantity': quantity })
             }
             return materials
