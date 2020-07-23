@@ -151,8 +151,8 @@ function Material_Reservation(props) {
     }
 
     function onSubmit() {
-
-        const selectedAvailableTypes = selectedTypes.filter(t => materialTypes.find(type => type.id == t.id))
+        //mudei aqui
+        const selectedAvailableTypes = selectedTypes
 
         if (selectedAvailableTypes.length === 0) {
             return toast({

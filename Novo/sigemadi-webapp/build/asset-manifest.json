@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/static/css/main.71f4aa34.chunk.css",
-    "main.js": "/static/js/main.c7fb5bad.chunk.js",
+    "main.js": "/static/js/main.816b20d3.chunk.js",
     "runtime-main.js": "/static/js/runtime-main.47599931.js",
     "static/css/2.9c9391ac.chunk.css": "/static/css/2.9c9391ac.chunk.css",
-    "static/js/2.01ba8084.chunk.js": "/static/js/2.01ba8084.chunk.js",
+    "static/js/2.2074e41e.chunk.js": "/static/js/2.2074e41e.chunk.js",
     "index.html": "/index.html",
-    "precache-manifest.aefe360fd0e769b77c73d4db4369279e.js": "/precache-manifest.aefe360fd0e769b77c73d4db4369279e.js",
+    "precache-manifest.062d945485639427f8b77a111bed71b6.js": "/precache-manifest.062d945485639427f8b77a111bed71b6.js",
     "service-worker.js": "/service-worker.js",
-    "static/js/2.01ba8084.chunk.js.LICENSE.txt": "/static/js/2.01ba8084.chunk.js.LICENSE.txt",
+    "static/js/2.2074e41e.chunk.js.LICENSE.txt": "/static/js/2.2074e41e.chunk.js.LICENSE.txt",
     "static/media/Desintegrating_html.png": "/static/media/Desintegrating_html.b03b05a2.png",
     "static/media/IselAdeetcLogo.png": "/static/media/IselAdeetcLogo.bf8ea183.png",
     "static/media/SigemadiLogo.png": "/static/media/SigemadiLogo.a1773ca5.png",
@@ -20,8 +20,8 @@
   "entrypoints": [
     "static/js/runtime-main.47599931.js",
     "static/css/2.9c9391ac.chunk.css",
-    "static/js/2.01ba8084.chunk.js",
+    "static/js/2.2074e41e.chunk.js",
     "static/css/main.71f4aa34.chunk.css",
-    "static/js/main.c7fb5bad.chunk.js"
+    "static/js/main.816b20d3.chunk.js"
   ]
 }
