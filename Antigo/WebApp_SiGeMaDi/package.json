@@ -15,7 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "@babel/plugin-proposal-class-properties": "^7.2.3",
-    "axios": "^0.19.2",
+    "axios": "^1.6.8",
     "babel-plugin-transform-runtime": "^6.23.0",
     "core-js": "^2.6.11",
     "craco": "0.0.3",
