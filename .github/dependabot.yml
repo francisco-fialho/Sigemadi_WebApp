@@ -5,7 +5,7 @@ updates:
       - "/updater"
       - "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
       day: "sunday"
       time: "16:00"
     groups:
